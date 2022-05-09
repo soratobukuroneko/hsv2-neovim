@@ -28,11 +28,19 @@ cd ~/.local/src
 git clone --depth 1 https://github.com/40huo/Patched-Fonts.git
 cp Patched-Fonts/operator-mono-nerd-font/* ~/Library/Fonts/
 
-echo "Installing lua-language-server"
-mkdir ~/.local/lua-language-server
-curl -L --silent https://github.com/sumneko/lua-language-server/releases/download/3.2.2/lua-language-server-3.2.2-darwin-x64.tar.gz -o /tmp/lua-language-server.tar.gz
-tar xf /tmp/lua-language-server.tar.gz -C ~/.local/lua-language-server
-echo 'export PATH="$HOME/.local/lua-language-server/bin:$PATH"' >> ~/.zshrc
+echo "Installing dependencies"
+git clone --depth 1 https://github.com/Homebrew/brew ~/.local/homebrew
+eval "`~/.local/homebrew/bin/brew shellenv`"
+brew update --force --quiet
+chmod -R go-w "$(brew --prefix)/share/zsh"
+echo 'eval "`~/.local/homebrew/bin/brew shellenv`"' >> ~/.zshrc
+brew install fd bat glow lua-language-server
+
+#echo "Installing lua-language-server"
+#mkdir ~/.local/lua-language-server
+#curl -L --silent https://github.com/sumneko/lua-language-server/releases/download/3.2.2/lua-language-server-3.2.2-darwin-x64.tar.gz -o /tmp/lua-language-server.tar.gz
+#tar xf /tmp/lua-language-server.tar.gz -C ~/.local/lua-language-server
+#echo 'export PATH="$HOME/.local/lua-language-server/bin:$PATH"' >> ~/.zshrc
 
 echo "Install Oh My Zsh"
 sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"

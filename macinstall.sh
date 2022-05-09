@@ -33,8 +33,9 @@ git clone --depth 1 https://github.com/Homebrew/brew ~/.local/homebrew
 eval "`~/.local/homebrew/bin/brew shellenv`"
 brew update --force --quiet
 chmod -R go-w "$(brew --prefix)/share/zsh"
-echo 'eval "`~/.local/homebrew/bin/brew shellenv`"' >> ~/.zshrc
+echo 'PATH="$HOME/.local/homebrew/bin:$PATH"' >> ~/.zshrc
 brew install fd bat glow lua-language-server
+rm -rf ~/.local/homebrew/Library
 
 #echo "Installing lua-language-server"
 #mkdir ~/.local/lua-language-server

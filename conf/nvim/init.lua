@@ -1,5 +1,5 @@
 -- vi: et sw=4 ts=4
-FLAVOUR_42 = false
+FLAVOUR_42 = true
 
 PLUGINS = {}
 
@@ -38,6 +38,7 @@ local pkgs = {
     'rmagatti/session-lens',
     'rafamadriz/neon', -- theme
     'numToStr/Comment.nvim',
+    'numToStr/FTerm.nvim',
 }
 if FLAVOUR_42 then
     table.insert(pkgs, '42Paris/42header')
@@ -46,18 +47,18 @@ end
 
 PLUGINS.has_packer, PLUGINS.packer = pcall(require, 'packer')
 if not PLUGINS.has_packer then
-    require('bootstrap').bootstrap_packer({pkgs})
+    require('bootstrap').bootstrap_packer({ pkgs })
 else
-    PLUGINS.packer.startup({pkgs})
+    PLUGINS.packer.startup({ pkgs })
 end
 
 ----- Core ------
 vim.g.mapleader = ' '
 vim.g.localleader = ','
 vim.keymap.set(
-{ 'n', 'v' },
-'<Space>',
-'<Nop>'
+    { 'n', 'v' },
+    '<Space>',
+    '<Nop>'
 )
 vim.opt.breakindent = true
 vim.opt.clipboard = 'unnamedplus'
@@ -76,10 +77,6 @@ vim.opt.termguicolors = true
 vim.opt.textwidth = 80
 vim.opt.undofile = true
 vim.g.vimsyn_embed = 'l'
-vim.api.nvim_create_autocmd('TextYankPost', {
-    pattern = '*',
-    callback = vim.highlight.on_yank
-})
 vim.api.nvim_create_autocmd('FileType', {
     pattern = 'make',
     callback = function()
@@ -131,7 +128,7 @@ if PLUGINS.has_telescope then
     vim.keymap.set('n', '<Leader>tq', '<CMD>Telescope quickfix<CR>', { desc = 'Quickfix' })
     vim.keymap.set('n', '<Leader>tm', function()
         require('telescope.builtin').man_pages({ sections = { 'ALL' } })
-        end, { desc = 'Manual Pages' })
+    end, { desc = 'Manual Pages' })
     vim.keymap.set('n', '<Leader>th', '<CMD>Telescope help_tags<CR>', { desc = 'Help' })
     vim.keymap.set('n', '<Leader>tk', '<CMD>Telescope keymaps<CR>', { desc = 'Keymaps' })
     vim.keymap.set('n', '<Leader>tgc', '<CMD>Telescope git_bcommits<CR>', { desc = 'Commits' })
@@ -168,28 +165,28 @@ if PLUGINS.has_comment_nvim then
     vim.keymap.set('n', '<Leader>cc', function()
         return vim.v.count == 0 and '<Plug>(comment_toggle_current_linewise)' or '<Plug>(comment_toggle_linewise_count)'
     end, {
-    expr = true,
-    desc = 'Toggle Line'
-})
-vim.keymap.set('x', '<Leader>cc', '<Plug>(comment_toggle_linewise_visual)', {
-    desc = 'Toggle Line'
-} )
-vim.keymap.set('n', '<Leader>cb', function()
-    return vim.v.count == 0 and '<Plug>(comment_toggle_current_blockwise)' or '<Plug>(comment_toggle_blockwise_count)'
-end, {
-expr = true,
-desc = 'Toggle Block'
-})
-vim.keymap.set('x', '<Leader>cb', '<Plug>(comment_toggle_blockwise_visual)', {
-    desc = 'Toggle Block'
-})
-if PLUGINS.has_which_key_nvim then
-    PLUGINS.which_key_nvim.register({
-        c = {
-            name = 'Comments'
-        }
-    }, { prefix = '<Leader>' })
-end
+        expr = true,
+        desc = 'Toggle Line'
+    })
+    vim.keymap.set('x', '<Leader>cc', '<Plug>(comment_toggle_linewise_visual)', {
+        desc = 'Toggle Line'
+    })
+    vim.keymap.set('n', '<Leader>cb', function()
+        return vim.v.count == 0 and '<Plug>(comment_toggle_current_blockwise)' or '<Plug>(comment_toggle_blockwise_count)'
+    end, {
+        expr = true,
+        desc = 'Toggle Block'
+    })
+    vim.keymap.set('x', '<Leader>cb', '<Plug>(comment_toggle_blockwise_visual)', {
+        desc = 'Toggle Block'
+    })
+    if PLUGINS.has_which_key_nvim then
+        PLUGINS.which_key_nvim.register({
+            c = {
+                name = 'Comments'
+            }
+        }, { prefix = '<Leader>' })
+    end
 end
 
 ----- coc.nvim -----
@@ -256,12 +253,13 @@ function _G.check_back_space()
     local col = vim.api.nvim_win_get_cursor(0)[2]
     return (col == 0 or vim.api.nvim_get_current_line():sub(col, col):match('%s'))
 end
+
 vim.keymap.set('i', '<C-Space>', 'coc#refresh()', {
     silent = true,
     expr = true
 })
 vim.keymap.set('i', '<TAB>',
-"pumvisible() ? '<C-n>' : v:lua.check_back_space() ? '<Tab>' : coc#refresh()", {
+    "pumvisible() ? '<C-n>' : v:lua.check_back_space() ? '<Tab>' : coc#refresh()", {
     noremap = true,
     silent = true,
     expr = true
@@ -271,7 +269,7 @@ vim.keymap.set('i', '<S-TAB>', 'pumvisible() ? "<C-p>" : "<C-h>"', {
     expr = true
 })
 vim.keymap.set('i', '<CR>',
-'pumvisible() ? coc#_select_confirm() : "<C-G>u<CR><C-R>=coc#on_enter()<CR>"', {
+    'pumvisible() ? coc#_select_confirm() : "<C-G>u<CR><C-R>=coc#on_enter()<CR>"', {
     silent = true,
     expr = true,
     noremap = true
@@ -280,7 +278,7 @@ vim.api.nvim_create_autocmd('FileType', {
     pattern = { 'c', 'cpp' },
     callback = function()
         vim.keymap.set('n', '<Leader>ljs',
-        '<CMD>CocCommand clangd.switchSourceHeader vsplit<CR>', {
+            '<CMD>CocCommand clangd.switchSourceHeader vsplit<CR>', {
             buffer = true,
             desc = 'Switch Header/Source'
         })
@@ -371,12 +369,12 @@ if PLUGINS.has_lualine then
     PLUGINS.lualine.setup({
         sections = {
             lualine_a = { { 'mode', fmt = function(str)
-                return str:sub(1,1)
+                return str:sub(1, 1)
             end } },
-            lualine_b = {'g:coc_status', 'branch', 'diff', {
+            lualine_b = { 'g:coc_status', 'branch', 'diff', {
                 'diagnostics',
                 sources = { 'coc' }
-            }, 'filetype'},
+            }, 'filetype' },
             lualine_c = {
                 {
                     'filename',
@@ -385,7 +383,7 @@ if PLUGINS.has_lualine then
             }
         },
         tabline = {
-            lualine_a = { { 'tabs', max_length  = vim.o.columns, mode = 2 } },
+            lualine_a = { { 'tabs', max_length = vim.o.columns, mode = 2 } },
         },
         options = {
             globalstatus = true,
@@ -408,7 +406,7 @@ if PLUGINS.has_neoclip then
     })
     vim.keymap.set('n', '<Leader>tc', '<CMD>Telescope neoclip<CR>', { desc = 'Clipboard' })
     if PLUGINS.has_telescope then
-        PLUGINS.telescope.load_extension('neoclip')
+        -- PLUGINS.telescope.load_extension('neoclip')
     end
 end
 
@@ -421,20 +419,17 @@ vim.g.suda_smart_edit = true
 
 ----- telescope-fzf-native.nvim -----
 if PLUGINS.has_telescope then
-    PLUGINS.has_telescope_fzf, PLUGINS.telescope_fzf
-    = pcall(PLUGINS.telescope.load_extension, 'fzf')
+    PLUGINS.has_telescope_fzf, PLUGINS.telescope_fzf = pcall(PLUGINS.telescope.load_extension, 'fzf')
 end
 
 ----- telescope-packer.nvim -----
 if PLUGINS.has_telescope then
-    PLUGINS.has_telescope_fzf, PLUGINS.telescope_fzf
-    = pcall(PLUGINS.telescope.load_extension, 'packer')
+    PLUGINS.has_telescope_fzf, PLUGINS.telescope_fzf = pcall(PLUGINS.telescope.load_extension, 'packer')
 end
 
 ----- telescope-file-browser.nvim -----
 if PLUGINS.has_telescope then
-    PLUGINS.has_telescope_fzf, PLUGINS.telescope_fzf
-    = pcall(PLUGINS.telescope.load_extension, 'file_browser')
+    PLUGINS.has_telescope_fzf, PLUGINS.telescope_fzf = pcall(PLUGINS.telescope.load_extension, 'file_browser')
     vim.keymap.set('n', '<Leader>tb', '<CMD>Telescope file_browser grouped=true hidden=true<CR>', { desc = 'File Browser' })
 end
 
@@ -442,8 +437,7 @@ end
 
 ----- telescope-repo.nvim -----
 if PLUGINS.has_telescope then
-    PLUGINS.has_telescope_fzf, PLUGINS.telescope_fzf
-    = pcall(PLUGINS.telescope.load_extension, 'repo')
+    PLUGINS.has_telescope_fzf, PLUGINS.telescope_fzf = pcall(PLUGINS.telescope.load_extension, 'repo')
     vim.keymap.set('n', '<Leader>tr', '<CMD>Telescope repo list search_dirs=["~/"]<CR>', { desc = 'Repositories' })
 end
 

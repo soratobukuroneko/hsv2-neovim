@@ -439,7 +439,7 @@ end
 if PLUGINS.has_telescope then
     PLUGINS.has_telescope_fzf, PLUGINS.telescope_fzf
     = pcall(PLUGINS.telescope.load_extension, 'repo')
-    vim.keymap.set('n', '<Leader>tr', '<CMD>Telescope repo list search_dirs=["~/dev"]<CR>', { desc = 'Repositories' })
+    vim.keymap.set('n', '<Leader>tr', '<CMD>Telescope repo list search_dirs=["~/"]<CR>', { desc = 'Repositories' })
 end
 
 ----- auto-session -----

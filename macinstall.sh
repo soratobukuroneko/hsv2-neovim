@@ -33,6 +33,12 @@ mkdir -p ~/.config
 mv -f ~/.config/nvim ~/.config/nvim-`date "+%Y%m%d%H%M%S"`
 ln -vs "$SRC_DIR/conf/nvim" ~/.config/
 
+echo "Installing lua-language-server"
+mkdir ~/.local/lua-language-server
+curl -L --silent https://github.com/sumneko/lua-language-server/releases/download/3.2.2/lua-language-server-3.2.2-darwin-x64.tar.gz -o /tmp/lua-language-server.tar.gz
+tar xf /tmp/lua-language-server.tar.gz -C ~/.local/lua-language-server
+echo 'export PATH="$HOME/.local/lua-language-server/bin:$PATH"' >> ~/.zshrc
+
 echo "Install Oh My Zsh"
 sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 

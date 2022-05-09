@@ -89,7 +89,7 @@ vim.api.nvim_create_autocmd('FileType', {
 
 ----- which-key.nvim -----
 PLUGINS.has_which_key_nvim, PLUGINS.which_key_nvim = pcall(require, 'which-key')
-if has_which_key_nvim then
+if PLUGINS.has_which_key_nvim then
     vim.opt.timeoutlen = 300
 end
 
@@ -129,7 +129,7 @@ if PLUGINS.has_telescope then
     vim.keymap.set('n', '<Leader>tf', '<CMD>Telescope find_files<CR>', { desc = 'Find Files' })
     vim.keymap.set('n', '<Leader>tB', '<CMD>Telescope buffers<CR>', { desc = 'Buffers' })
     vim.keymap.set('n', '<Leader>tq', '<CMD>Telescope quickfix<CR>', { desc = 'Quickfix' })
-    vim.keymap.set('n', '<Leader>tm', '<CMD>Telescope man_pages section=["ALL"]<CR>', { desc = 'Manual Pages' })
+    vim.keymap.set('n', '<Leader>tm', '<CMD>Telescope man_pages sections=["ALL"]<CR>', { desc = 'Manual Pages' })
     vim.keymap.set('n', '<Leader>th', '<CMD>Telescope help_tags<CR>', { desc = 'Help' })
     vim.keymap.set('n', '<Leader>tk', '<CMD>Telescope keymaps<CR>', { desc = 'Keymaps' })
     vim.keymap.set('n', '<Leader>tgc', '<CMD>Telescope git_bcommits<CR>', { desc = 'Commits' })
@@ -324,16 +324,16 @@ end
 
 ----- gitsigns.nvim -----
 PLUGINS.has_gitsigns, PLUGINS.gitsigns = pcall(require, 'gitsigns')
-if has_gitsigns then
+if PLUGINS.has_gitsigns then
     PLUGINS.gitsigns.setup({
         current_line_blame = true,
         on_attach = function(bufnr)
-            vim.keymap.set('n', '<Leader>ghn', gitsigns.next_hunk, { buffer = bufnr, desc = 'Next' })
-            vim.keymap.set('n', '<Leader>ghp', gitsigns.prev_hunk, { buffer = bufnr, desc = 'Previous' })
-            vim.keymap.set('n', '<Leader>ghh', gitsigns.preview_hunk, { buffer = bufnr, desc = 'Preview' })
-            vim.keymap.set({ 'n', 'v' }, '<Leader>ghs', gitsigns.stage_hunk, { buffer = bufnr, desc = 'Stage' })
-            vim.keymap.set('n', '<Leader>ghu', gitsigns.undo_stage_hunk, { buffer = bufnr, desc = 'Unstage' })
-            vim.keymap.set({ 'n', 'v' }, '<Leader>ghr', gitsigns.reset_hunk, { buffer = bufnr, desc = 'Reset' })
+            vim.keymap.set('n', '<Leader>ghn', PLUGINS.gitsigns.next_hunk, { buffer = bufnr, desc = 'Next' })
+            vim.keymap.set('n', '<Leader>ghp', PLUGINS.gitsigns.prev_hunk, { buffer = bufnr, desc = 'Previous' })
+            vim.keymap.set('n', '<Leader>ghh', PLUGINS.gitsigns.preview_hunk, { buffer = bufnr, desc = 'Preview' })
+            vim.keymap.set({ 'n', 'v' }, '<Leader>ghs', PLUGINS.gitsigns.stage_hunk, { buffer = bufnr, desc = 'Stage' })
+            vim.keymap.set('n', '<Leader>ghu', PLUGINS.gitsigns.undo_stage_hunk, { buffer = bufnr, desc = 'Unstage' })
+            vim.keymap.set({ 'n', 'v' }, '<Leader>ghr', PLUGINS.gitsigns.reset_hunk, { buffer = bufnr, desc = 'Reset' })
         end,
     })
 end
@@ -397,7 +397,7 @@ end
 
 ----- neoclip -----
 PLUGINS.has_neoclip, PLUGINS.neoclip = pcall(require, 'neoclip')
-if has_neoclip then
+if PLUGINS.has_neoclip then
     PLUGINS.neoclip.setup({
         enable_persistent_history = true,
         continuous_sync = true,
@@ -476,6 +476,8 @@ end
 
 ----- 42 -----
 if FLAVOUR_42 then
+    vim.g.user42 = 'ablanken'
+    vim.g.mail42 = 'ablanken@student.42barcelona.com'
     vim.opt.expandtab = false
     vim.keymap.set('n', '<Leader>ah', '<CMD>Stdheader<CR>', { desc = '42 Header' })
     vim.keymap.set('n', '<Leader>af', '<CMD>CFormatter42<CR>', { desc = '42 Format' })

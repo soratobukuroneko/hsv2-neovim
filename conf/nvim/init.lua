@@ -37,6 +37,7 @@ local pkgs = {
     'rmagatti/auto-session',
     'rmagatti/session-lens',
     'rafamadriz/neon', -- theme
+    'numToStr/Comment.nvim',
 }
 if FLAVOUR_42 then
     table.insert(pkgs, '42Paris/42header')

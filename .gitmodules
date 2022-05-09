@@ -1,6 +1,3 @@
-[submodule "fonts/Operator-Mono"]
-	path = fonts/Operator-Mono
-	url = https://github.com/keyding/Operator-Mono
 [submodule "fonts/operator-mono-lig"]
 	path = fonts/operator-mono-lig
 	url = https://github.com/kiliman/operator-mono-lig

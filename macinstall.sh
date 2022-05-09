@@ -23,7 +23,7 @@ cd neovim-conf
 SRC_DIR="$PWD"
 git submodule init
 git submodule update
-cp -f fonts/Operator-Mono/Fonts/* fonts/operator-mono-lig/original/
+cp -f fonts/Operator-Mono/* fonts/operator-mono-lig/original/
 pip3 install --user fonttools
 cd fonts/operator-mono-lig
 npm install

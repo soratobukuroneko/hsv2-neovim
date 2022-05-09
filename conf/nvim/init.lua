@@ -155,8 +155,8 @@ vim.keymap.set('n', '<Leader>?', '<CMD>Cheatsheet<CR>', {
 
 ----- Comment.nvim -----
 PLUGINS.has_comment_nvim, PLUGINS.comment_nvim = pcall(require, 'Comment')
-if has_comment_nvim then
-    comment_nvim.setup({
+if PLUGINS.has_comment_nvim then
+    PLUGINS.comment_nvim.setup({
         mappings = {
             basic = false,
             extra = false,

@@ -21,17 +21,12 @@ cd ~/.local/src
 git clone --depth 1 https://git.disroot.org/soratobuneko/neovim-conf.git
 cd neovim-conf
 SRC_DIR="$PWD"
-git submodule init
-git submodule update
-cp -f fonts/Operator-Mono/* fonts/operator-mono-lig/original/
-pip3 install --user fonttools
-cd fonts/operator-mono-lig
-npm install
-./build.sh
-cp -v build/* ~/Library/Fonts
 mkdir -p ~/.config
 mv -f ~/.config/nvim ~/.config/nvim-`date "+%Y%m%d%H%M%S"`
 ln -vs "$SRC_DIR/conf/nvim" ~/.config/
+cd ~/.local/src
+git clone --depth 1 https://github.com/40huo/Patched-Fonts.git
+cp Patched-Fonts/operator-mono-nerd-font/* ~/Library/Fonts/
 
 echo "Installing lua-language-server"
 mkdir ~/.local/lua-language-server

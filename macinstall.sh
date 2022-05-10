@@ -7,8 +7,12 @@ eval "`$INSTALL_DIR/bin/brew shellenv`"
 brew update --force --quiet
 chmod -R go-w "`brew --prefix`/share/zsh"
 brew install fd bat glow lua-language-server neovim sqlite node ripgrep
-brew tap homebrew/cask-fonts
-brew install --cask font-victor-mono
+mkdir -p /tmp/font_install
+cd /tmp/font_install
+curl -L "https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/VictorMono.zip" -o victormono.zip
+unzip victormono.zip
+rm *Windows*
+mv *.ttf ~/Library/Fonts/
 rm -rf "$INSTALL_DIR/Library"
 rm -f "$INSTALL_DIR/bin/brew"
 echo "`$INSTALL_DIR/bin/brew shellenv | grep --color=no PATH`" >> ~/.zshrc
@@ -32,4 +36,4 @@ sh -c "`curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.s
 
 echo
 echo "Source your ~/.zshrc or open a new shell"
-echo "You need to set your terminal font to 'Operator Mono Lig'"
+echo "You need to set your terminal font to 'Victor Mono Nerd Font'"

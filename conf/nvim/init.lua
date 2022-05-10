@@ -406,7 +406,7 @@ if PLUGINS.has_neoclip then
     })
     vim.keymap.set('n', '<Leader>tc', '<CMD>Telescope neoclip<CR>', { desc = 'Clipboard' })
     if PLUGINS.has_telescope then
-        -- PLUGINS.telescope.load_extension('neoclip')
+        PLUGINS.telescope.load_extension('neoclip')
     end
 end
 

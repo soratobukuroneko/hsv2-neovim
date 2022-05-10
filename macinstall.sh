@@ -15,7 +15,7 @@ source ~/.zshrc
 echo "Install Neovim python bindings"
 pip3 install --user pynvim
 
-echo "Installing Neovim configuration and fonts"
+echo "Installing Neovim configuration"
 mkdir -p ~/.local/src
 cd ~/.local/src
 git clone --depth 1 https://git.disroot.org/soratobuneko/neovim-conf.git
@@ -24,9 +24,6 @@ SRC_DIR="$PWD"
 mkdir -p ~/.config
 mv -f ~/.config/nvim ~/.config/nvim-`date "+%Y%m%d%H%M%S"`
 ln -vs "$SRC_DIR/conf/nvim" ~/.config/
-cd ~/.local/src
-git clone --depth 1 https://github.com/40huo/Patched-Fonts.git
-cp Patched-Fonts/operator-mono-nerd-font/* ~/Library/Fonts/
 
 echo "Installing dependencies"
 git clone --depth 1 https://github.com/Homebrew/brew ~/.local/homebrew
@@ -35,6 +32,8 @@ brew update --force --quiet
 chmod -R go-w "$(brew --prefix)/share/zsh"
 echo 'PATH="$HOME/.local/homebrew/bin:$PATH"' >> ~/.zshrc
 brew install fd bat glow lua-language-server
+brew tap homebrew/cask-fonts
+brew install --cask font-victor-mono
 rm -rf ~/.local/homebrew/Library
 
 #echo "Installing lua-language-server"

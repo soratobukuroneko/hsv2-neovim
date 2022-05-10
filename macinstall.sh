@@ -6,7 +6,7 @@ git clone --depth 1 https://github.com/Homebrew/brew "$INSTALL_DIR"
 eval "`$INSTALL_DIR/bin/brew shellenv`"
 brew update --force --quiet
 chmod -R go-w "`brew --prefix`/share/zsh"
-brew install fd bat glow lua-language-server neovim sqlite node
+brew install fd bat glow lua-language-server neovim sqlite node ripgrep
 brew tap homebrew/cask-fonts
 brew install --cask font-victor-mono
 rm -rf "$INSTALL_DIR/Library"

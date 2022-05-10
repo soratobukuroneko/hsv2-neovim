@@ -39,6 +39,7 @@ local pkgs = {
     'rafamadriz/neon', -- theme
     'numToStr/Comment.nvim',
     'numToStr/FTerm.nvim',
+    'ellisonleao/glow.nvim',
 }
 if FLAVOUR_42 then
     table.insert(pkgs, '42Paris/42header')
@@ -122,6 +123,7 @@ if PLUGINS.has_telescope then
             }
         }
     })
+    PLUGINS.telescope.builtin = require('telescope.builtin')
     vim.keymap.set('n', '<Leader>t<Space>', '<CMD>Telescope resume<CR>', { desc = 'Reopen' })
     vim.keymap.set('n', '<Leader>tf', '<CMD>Telescope find_files<CR>', { desc = 'Find Files' })
     vim.keymap.set('n', '<Leader>tB', '<CMD>Telescope buffers<CR>', { desc = 'Buffers' })

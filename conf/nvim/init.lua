@@ -10,11 +10,12 @@ CONF = {
     },
     -- Browse - Repositories searches in the following directories
     repo_dirs = {
-        '~',
+        '~/dev',
     },
     -- Browse - Find Files search directories
     find_files_dirs = {
         '~',
+        '/etc',
     },
     -- Key mapping prefix
     leader = ' ',

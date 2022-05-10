@@ -511,8 +511,8 @@ end
 
 ----- 42 -----
 if FLAVOUR_42 then
-    vim.g.user42 = 'ablanken'
-    vim.g.mail42 = 'ablanken@student.42barcelona.com'
+    vim.g.user42 = '<CHANGEME>'
+    vim.g.mail42 = '<CHANGEME>'
     vim.opt.expandtab = false
     vim.keymap.set('n', '<Leader>ah', '<CMD>Stdheader<CR>', { desc = '42 Header' })
     vim.keymap.set('n', '<Leader>af', '<CMD>CFormatter42<CR>', { desc = '42 Format' })

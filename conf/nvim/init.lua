@@ -195,7 +195,7 @@ if PLUGINS.has_telescope then
     end, {
         desc = 'Revisions'
     })
-    vim.keymap.set('n', '<Leader>gB', function()
+    vim.keymap.set('n', '<Leader>gb', function()
         PLUGINS.telescope.builtin.git_branches()
     end, {
         desc = 'Branches',

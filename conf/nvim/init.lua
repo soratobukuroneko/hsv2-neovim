@@ -475,6 +475,20 @@ if status then
     })
 end
 
+----- fugitive -----
+vim.keymap.set('n', '<Leader>gd', '<CMD>Git! difftool<CR>', {
+        desc = 'diff'
+    })
+vim.keymap.set('n', '<Leader>gm', '<CMD>Git mergetool<CR>', {
+        desc = 'Merge Conflicts'
+    })
+vim.keymap.set('n', '<Leader>gl', '<CMD>Git log<CR>', {
+        desc = 'log'
+    })
+vim.keymap.set('n', '<Leader>gc', '<CMD>Git commit<CR>', {
+        desc = 'commit'
+    })
+
 ----- 42 -----
 if FLAVOUR_42 then
     vim.g.user42 = 'ablanken'

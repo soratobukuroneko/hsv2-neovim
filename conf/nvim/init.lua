@@ -324,6 +324,11 @@ if PLUGINS.has_fterm then
     })
 end
 
+----- fugitive -----
+vim.keymap.set('n', '<Leader>gi', '<CMD>Git init<CR>', {
+        desc = 'Init'
+    })
+
 ----- gitsigns.nvim -----
 PLUGINS.has_gitsigns, PLUGINS.gitsigns = pcall(require, 'gitsigns')
 if PLUGINS.has_gitsigns then
@@ -336,6 +341,22 @@ if PLUGINS.has_gitsigns then
             vim.keymap.set({ 'n', 'v' }, '<Leader>ghs', PLUGINS.gitsigns.stage_hunk, { buffer = bufnr, desc = 'Stage' })
             vim.keymap.set('n', '<Leader>ghu', PLUGINS.gitsigns.undo_stage_hunk, { buffer = bufnr, desc = 'Unstage' })
             vim.keymap.set({ 'n', 'v' }, '<Leader>ghr', PLUGINS.gitsigns.reset_hunk, { buffer = bufnr, desc = 'Reset' })
+            ----- fugitive -----
+            vim.keymap.set('n', '<Leader>ga', '<CMD>Gwrite<CR>', {
+                    desc = 'Stage File'
+                })
+            vim.keymap.set('n', '<Leader>gd', '<CMD>Git! difftool<CR>', {
+                desc = 'diff'
+            })
+            vim.keymap.set('n', '<Leader>gm', '<CMD>Git mergetool<CR>', {
+                desc = 'Merge Conflicts'
+            })
+            vim.keymap.set('n', '<Leader>gl', '<CMD>Git log<CR>', {
+                desc = 'log'
+            })
+            vim.keymap.set('n', '<Leader>gc', '<CMD>Git commit<CR>', {
+                desc = 'commit'
+            })
         end,
     })
 end
@@ -475,19 +496,6 @@ if status then
     })
 end
 
------ fugitive -----
-vim.keymap.set('n', '<Leader>gd', '<CMD>Git! difftool<CR>', {
-        desc = 'diff'
-    })
-vim.keymap.set('n', '<Leader>gm', '<CMD>Git mergetool<CR>', {
-        desc = 'Merge Conflicts'
-    })
-vim.keymap.set('n', '<Leader>gl', '<CMD>Git log<CR>', {
-        desc = 'log'
-    })
-vim.keymap.set('n', '<Leader>gc', '<CMD>Git commit<CR>', {
-        desc = 'commit'
-    })
 
 ----- 42 -----
 if FLAVOUR_42 then

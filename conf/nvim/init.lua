@@ -363,6 +363,9 @@ if PLUGINS.has_gitsigns then
             vim.keymap.set('n', '<Leader>gp', '<CMD>Git push<CR>', {
                 desc = 'push'
             })
+            vim.keymap.set('n', '<Leader>gP', '<CMD>Git push --force<CR>', {
+                desc = 'push --force'
+            })
             vim.keymap.set('n', '<Leader>gM', '<CMD>Git push --mirror<CR>', {
                 desc = 'push --mirror'
             })

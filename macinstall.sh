@@ -30,6 +30,8 @@ SRC_DIR="$PWD"
 mkdir -p ~/.config
 mv -f ~/.config/nvim ~/.config/nvim-`date "+%Y%m%d%H%M%S"`
 ln -vs "$SRC_DIR/conf/nvim" ~/.config/
+cd "$SRC_DIR"
+git checkout -b localconf
 
 echo "Install Oh My Zsh"
 sh -c "`curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh`"

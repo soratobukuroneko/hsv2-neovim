@@ -1,17 +1,28 @@
 -- vi: et sw=4 ts=4
 -- hsv-2
--- 
--- Enable features for 42 specific needs.
-FLAVOUR_42 = true
+--
+CONF = {
+    -- Enable features for 42 specific needs.
+    flavour42 = {
+        is_enabled = false,
+        username = '<CHANGE ME>',
+        email = '<CHANGE ME>',
+    },
+    -- Browse - Repositories searches in the following directories
+    repo_dirs = {
+        '~',
+    },
+    -- Browse - Find Files search directories
+    find_files_dirs = {
+        '~',
+    },
+}
 
 local pkgs = {
     'wbthomason/packer.nvim',
     'soratobukuroneko/sqlite.lua', -- needed by some plugins
-    'nvim-treesitter/nvim-treesitter', -- ditto
-    'nvim-lua/plenary.nvim', -- ibidem
     'gentoo/gentoo-syntax',
     'sheerun/vim-polyglot',
-    'sudormrfbin/cheatsheet.nvim',
     'folke/which-key.nvim',
     {
         'neoclide/coc.nvim',
@@ -36,13 +47,16 @@ local pkgs = {
     'nvim-telescope/telescope-symbols.nvim',
     'cljoly/telescope-repo.nvim',
     'rmagatti/auto-session',
-    'rmagatti/session-lens',
+    {
+        'rmagatti/session-lens',
+        requires = { 'nvim-lua/plenary.nvim' }
+    },
     'rafamadriz/neon', -- theme
     'numToStr/Comment.nvim',
     'numToStr/FTerm.nvim',
     'ellisonleao/glow.nvim',
 }
-if FLAVOUR_42 then
+if CONF.flavour42.is_enabled then
     table.insert(pkgs, '42Paris/42header')
     table.insert(pkgs, 'cacharle/c_formatter_42.vim')
 end
@@ -54,6 +68,11 @@ if not PLUGINS.has_packer then
     require('bootstrap').bootstrap_packer({ pkgs })
 else
     PLUGINS.packer.startup({ pkgs })
+    vim.keymap.set('n', '<Leader>vu', function()
+        PLUGINS.packer.update()
+    end, {
+        desc = 'Update Packages',
+    })
 end
 
 ----- Core ------
@@ -89,8 +108,8 @@ vim.api.nvim_create_autocmd('FileType', {
 })
 
 ----- which-key.nvim -----
-PLUGINS.has_which_key_nvim, PLUGINS.which_key_nvim = pcall(require, 'which-key')
-if PLUGINS.has_which_key_nvim then
+PLUGINS.has_which_key, PLUGINS.which_key = pcall(require, 'which-key')
+if PLUGINS.has_which_key then
     vim.opt.timeoutlen = 300
 end
 
@@ -99,7 +118,7 @@ PLUGINS.has_telescope, PLUGINS.telescope = pcall(require, 'telescope')
 if PLUGINS.has_telescope then
     PLUGINS.telescope.setup({
         defaults = {
-            winblend = 30,
+            winblend = 15,
             path_display = { 'smart' },
             dynamic_preview_title = true,
             history = {
@@ -116,52 +135,104 @@ if PLUGINS.has_telescope then
                     ['<C-?>'] = 'which_key',
                 }
             },
-            vimgrep_arguments = {
-                'grep',
-                '--color=never',
-                '--no-heading',
-                '--with-filename',
-                '--line-number',
-                '--column',
-            }
         }
     })
     PLUGINS.telescope.builtin = require('telescope.builtin')
-    vim.keymap.set('n', '<Leader>t<Space>', '<CMD>Telescope resume<CR>', { desc = 'Reopen' })
-    vim.keymap.set('n', '<Leader>tf', '<CMD>Telescope find_files<CR>', { desc = 'Find Files' })
-    vim.keymap.set('n', '<Leader>tB', '<CMD>Telescope buffers<CR>', { desc = 'Buffers' })
-    vim.keymap.set('n', '<Leader>tq', '<CMD>Telescope quickfix<CR>', { desc = 'Quickfix' })
-    vim.keymap.set('n', '<Leader>tm', function()
-        require('telescope.builtin').man_pages({ sections = { 'ALL' } })
-    end, { desc = 'Manual Pages' })
-    vim.keymap.set('n', '<Leader>th', '<CMD>Telescope help_tags<CR>', { desc = 'Help' })
-    vim.keymap.set('n', '<Leader>tk', '<CMD>Telescope keymaps<CR>', { desc = 'Keymaps' })
-    vim.keymap.set('n', '<Leader>gC', '<CMD>Telescope git_bcommits<CR>', { desc = 'Browse Commits' })
-    vim.keymap.set('n', '<Leader>gB', '<CMD>Telescope git_branches<CR>', { desc = 'Branches' })
-    vim.keymap.set('n', '<Leader>gS', '<CMD>Telescope git_status<CR>', { desc = 'Status' })
+    vim.keymap.set('n', '<Leader><Space>', function()
+        PLUGINS.telescope.builtin.resume()
+    end, {
+        desc = 'Reopen Telescope',
+    })
+    vim.keymap.set('n', '<Leader>bs', function()
+        PLUGINS.telescope.builtin.find_files({
+            follow = true,
+            search_dirs = CONF.find_files_dirs,
+        })
+    end, {
+        desc = 'Find Files in CWD',
+    })
+    vim.keymap.set('n', '<Leader>bS', function()
+        PLUGINS.telescope.builtin.find_files({
+            follow = true,
+            search_dirs = CONF.find_files_dirs,
+        })
+    end, {
+        desc = 'Find Files',
+    })
+    vim.keymap.set('n', '<Leader>bb', function()
+        PLUGINS.telescope.builtin.buffers({
+            sort_mru = true,
+        })
+    end, {
+        desc = 'Buffers',
+    })
+    vim.keymap.set('n', '<Leader>q', function()
+        PLUGINS.telescope.builtin.quickfix()
+    end, {
+        desc = 'Quickfix',
+    })
+    vim.keymap.set('n', '<Leader>bm', function()
+        PLUGINS.telescope.builtin.man_pages({
+            sections = { 'ALL' },
+        })
+    end, {
+        desc = 'Manual Pages',
+    })
+    vim.keymap.set('n', '<Leader>vh', function()
+        PLUGINS.telescope.builtin.help_tags()
+    end, {
+        desc = 'Help',
+    })
+    vim.keymap.set('n', '<Leader>vk', function()
+        PLUGINS.telescope.builtin.keymaps({
+            show_plug = false,
+        })
+    end, {
+        desc = 'Keymapping'
+    })
+    vim.keymap.set('n', '<Leader>gC', function()
+        PLUGINS.telescope.builtin.git_bcommits()
+    end, {
+        desc = 'Revisions'
+    })
+    vim.keymap.set('n', '<Leader>gB', function()
+        PLUGINS.telescope.builtin.git_branches()
+    end, {
+        desc = 'Branches',
+    })
+    vim.keymap.set('n', '<Leader>gS', function()
+        PLUGINS.telescope.builtin.git_status()
+    end, {
+        desc = 'Status',
+    })
     vim.keymap.set('c', '<C-r>', '<Plug>(TelescopeFuzzyCommandSearch)', { desc = 'Search Command History' })
 
-    if PLUGINS.has_which_key_nvim then
-        PLUGINS.which_key_nvim.register({
-            t = {
-                name = 'Telescope',
-                g = {
-                    name = 'Git'
-                }
-            }
-        }, { prefix = '<Leader>' })
+    if PLUGINS.has_which_key then
+        PLUGINS.which_key.register({
+            b = {
+                name = 'Browse',
+            },
+            g = {
+                name = 'Git',
+            },
+            v = {
+                name = 'Neovim',
+            },
+        }, {
+            prefix = '<Leader>',
+        })
     end
 end
 
 ----- Cheatsheet.nvim -----
-vim.keymap.set('n', '<Leader>?', '<CMD>Cheatsheet<CR>', {
+vim.keymap.set('n', '<Leader>v?', '<CMD>Cheatsheet<CR>', {
     desc = 'Cheatsheet'
 })
 
 ----- Comment.nvim -----
-PLUGINS.has_comment_nvim, PLUGINS.comment_nvim = pcall(require, 'Comment')
-if PLUGINS.has_comment_nvim then
-    PLUGINS.comment_nvim.setup({
+PLUGINS.has_comment, PLUGINS.comment = pcall(require, 'Comment')
+if PLUGINS.has_comment then
+    PLUGINS.comment.setup({
         mappings = {
             basic = false,
             extra = false,
@@ -185,8 +256,8 @@ if PLUGINS.has_comment_nvim then
     vim.keymap.set('x', '<Leader>cb', '<Plug>(comment_toggle_blockwise_visual)', {
         desc = 'Toggle Block'
     })
-    if PLUGINS.has_which_key_nvim then
-        PLUGINS.which_key_nvim.register({
+    if PLUGINS.has_which_key then
+        PLUGINS.which_key.register({
             c = {
                 name = 'Comments'
             }
@@ -289,27 +360,17 @@ vim.api.nvim_create_autocmd('FileType', {
         })
     end
 })
-vim.cmd('highlight link CocSemDefaultLibrary TSOtherDefaultLibrary')
-vim.cmd('highlight link CocSemDefaultLibraryClass TSTypeDefaultLibrary')
-vim.cmd('highlight link CocSemDefaultLibraryInterface TSTypeDefaultLibrary')
-vim.cmd('highlight link CocSemDefaultLibraryEnum TSTypeDefaultLibrary')
-vim.cmd('highlight link CocSemDefaultLibraryType TSTypeDefaultLibrary')
-vim.cmd('highlight link CocSemDefaultLibraryNamespace TSTypeDefaultLibrary')
-vim.cmd('highlight link CocSemDeclaration TSOtherDeclaration')
-vim.cmd('highlight link CocSemDeclarationClass TSTypeDeclaration')
-vim.cmd('highlight link CocSemDeclarationInterface TSTypeDeclaration')
-vim.cmd('highlight link CocSemDeclarationEnum TSTypeDeclaration')
-vim.cmd('highlight link CocSemDeclarationType TSTypeDeclaration')
-vim.cmd('highlight link CocSemDeclarationNamespace TSTypeDeclaration')
-if PLUGINS.has_which_key_nvim then
-    PLUGINS.which_key_nvim.register({
+if PLUGINS.has_which_key then
+    PLUGINS.which_key.register({
         l = {
             name = 'Language',
             j = {
                 name = 'Jump'
             }
         }
-    }, { prefix = '<Leader>' })
+    }, {
+        prefix = '<Leader>',
+    })
 end
 
 ----- FTerm.nvim -----
@@ -329,8 +390,8 @@ end
 
 ----- fugitive -----
 vim.keymap.set('n', '<Leader>gi', '<CMD>Git init<CR>', {
-        desc = 'Init'
-    })
+    desc = 'Init'
+})
 
 ----- gitsigns.nvim -----
 PLUGINS.has_gitsigns, PLUGINS.gitsigns = pcall(require, 'gitsigns')
@@ -346,34 +407,34 @@ if PLUGINS.has_gitsigns then
             vim.keymap.set({ 'n', 'v' }, '<Leader>ghr', PLUGINS.gitsigns.reset_hunk, { buffer = bufnr, desc = 'Reset' })
             ----- fugitive -----
             vim.keymap.set('n', '<Leader>ga', '<CMD>Gwrite<CR>', {
-                    desc = 'Stage File'
-                })
+                desc = 'Stage File'
+            }, { buffer = bufnr })
             vim.keymap.set('n', '<Leader>gd', '<CMD>Git! difftool<CR>', {
                 desc = 'diff'
-            })
+            }, { buffer = bufnr })
             vim.keymap.set('n', '<Leader>gm', '<CMD>Git mergetool<CR>', {
                 desc = 'Merge Conflicts'
-            })
+            }, { buffer = bufnr })
             vim.keymap.set('n', '<Leader>gl', '<CMD>Git log<CR>', {
                 desc = 'log'
-            })
+            }, { buffer = bufnr })
             vim.keymap.set('n', '<Leader>gc', '<CMD>Git commit<CR>', {
                 desc = 'commit'
-            })
+            }, { buffer = bufnr })
             vim.keymap.set('n', '<Leader>gp', '<CMD>Git push<CR>', {
                 desc = 'push'
-            })
+            }, { buffer = bufnr })
             vim.keymap.set('n', '<Leader>gP', '<CMD>Git push --force<CR>', {
                 desc = 'push --force'
-            })
+            }, { buffer = bufnr })
             vim.keymap.set('n', '<Leader>gM', '<CMD>Git push --mirror<CR>', {
                 desc = 'push --mirror'
-            })
+            }, { buffer = bufnr })
         end,
     })
 end
-if PLUGINS.has_which_key_nvim then
-    PLUGINS.which_key_nvim.register({
+if PLUGINS.has_which_key then
+    PLUGINS.which_key.register({
         g = {
             name = 'Git',
             h = {
@@ -439,7 +500,11 @@ if PLUGINS.has_neoclip then
         enable_macro_history = false,
         default_register = '+'
     })
-    vim.keymap.set('n', '<Leader>tc', '<CMD>Telescope neoclip<CR>', { desc = 'Clipboard' })
+    vim.keymap.set('n', '<Leader>bc', function()
+        PLUGINS.telescope.extensions.neoclip()
+    end, {
+        desc = 'Clipboard History',
+    })
     if PLUGINS.has_telescope then
         PLUGINS.telescope.load_extension('neoclip')
     end
@@ -459,35 +524,68 @@ end
 
 ----- telescope-packer.nvim -----
 if PLUGINS.has_telescope then
-    PLUGINS.has_telescope_fzf, PLUGINS.telescope_fzf = pcall(PLUGINS.telescope.load_extension, 'packer')
+    PLUGINS.has_telescope_packer, PLUGINS.telescope_packer = pcall(PLUGINS.telescope.load_extension, 'packer')
+    if PLUGINS.has_telescope_packer then
+        vim.keymap.set('n', '<Leader>vp', function()
+            PLUGINS.telescope.extensions.packer.packer()
+        end, {
+            desc = 'Packages',
+        })
+    end
 end
 
 ----- telescope-file-browser.nvim -----
 if PLUGINS.has_telescope then
-    PLUGINS.has_telescope_fzf, PLUGINS.telescope_fzf = pcall(PLUGINS.telescope.load_extension, 'file_browser')
-    vim.keymap.set('n', '<Leader>tb', '<CMD>Telescope file_browser grouped=true hidden=true<CR>', { desc = 'File Browser' })
+    PLUGINS.has_telescope_file_browser, PLUGINS.telescope_file_browser = pcall(PLUGINS.telescope.load_extension, 'file_browser')
+    vim.keymap.set('n', '<Leader>bf', function()
+        PLUGINS.telescope.builtin.file_browser({
+            grouped = true,
+            hidden = true,
+        })
+    end, {
+        desc = 'File Browser'
+    })
 end
 
 ----- telescope-symbols.nvim -----
 
 ----- telescope-repo.nvim -----
 if PLUGINS.has_telescope then
-    PLUGINS.has_telescope_fzf, PLUGINS.telescope_fzf = pcall(PLUGINS.telescope.load_extension, 'repo')
-    vim.keymap.set('n', '<Leader>tr', '<CMD>Telescope repo list search_dirs=["~/"]<CR>', { desc = 'Repositories' })
+    PLUGINS.has_telescope_repo, PLUGINS.telescope_repo = pcall(PLUGINS.telescope.load_extension, 'repo')
+    vim.keymap.set('n', '<Leader>br', function()
+        PLUGINS.telescope.extensions.repo.list({
+            search_dirs = CONF.repo_dirs
+        })
+    end, {
+        desc = 'Repositories'
+    })
 end
 
 ----- auto-session -----
 PLUGINS.has_auto_session, PLUGINS.auto_session = pcall(require, 'auto-session')
 if PLUGINS.has_auto_session then
     PLUGINS.auto_session.setup({
-        auto_session_suppress_dirs = { '~' }
+        auto_session_suppress_dirs = {
+            '~',
+        }
     })
     vim.o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal"
 end
 
 ----- session-lens -----
 if PLUGINS.has_telescope and PLUGINS.has_auto_session then
-    vim.keymap.set('n', '<Leader>ts', '<CMD>Telescope session-lens search_session<CR>', { desc = 'Sessions' })
+    PLUGINS.has_session_lens, PLUGINS.session_lens = pcall(require, 'session-lens')
+    if PLUGINS.has_session_lens then
+        PLUGINS.session_lens.setup({
+            previer = true,
+        })
+        PLUGINS.telescope.load_extension('session-lens')
+        vim.keymap.set('n', '<Leader>bs', function()
+            PLUGINS.telescope.extensions['session-lens'].search_session()
+        end, {
+            desc = 'Sessions',
+        })
+    end
 end
 
 ----- neon -----
@@ -510,14 +608,14 @@ end
 
 
 ----- 42 -----
-if FLAVOUR_42 then
-    vim.g.user42 = '<CHANGEME>'
-    vim.g.mail42 = '<CHANGEME>'
+if CONF.flavour42.is_enabled then
+    vim.g.user42 = CONF.flavour42.username
+    vim.g.mail42 = CONF.flavour42.email
     vim.opt.expandtab = false
     vim.keymap.set('n', '<Leader>ah', '<CMD>Stdheader<CR>', { desc = '42 Header' })
     vim.keymap.set('n', '<Leader>af', '<CMD>CFormatter42<CR>', { desc = '42 Format' })
-    if PLUGINS.has_which_key_nvim then
-        PLUGINS.which_key_nvim.register({
+    if PLUGINS.has_which_key then
+        PLUGINS.which_key.register({
             a = {
                 name = 'Actions'
             },

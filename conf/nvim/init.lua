@@ -550,7 +550,7 @@ end
 if PLUGINS.has_telescope then
     PLUGINS.has_telescope_file_browser, PLUGINS.telescope_file_browser = pcall(PLUGINS.telescope.load_extension, 'file_browser')
     vim.keymap.set('n', '<Leader>bf', function()
-        PLUGINS.telescope.builtin.file_browser({
+        PLUGINS.telescope.extensions.file_browser.file_browser({
             grouped = true,
             hidden = true,
         })

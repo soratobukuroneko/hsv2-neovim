@@ -17,12 +17,11 @@ local function bootstrap_packer(pkgs)
     -- Load Packer
     vim.cmd('packadd packer.nvim')
     PLUGINS.packer = require('packer')
-    -- Exit nvim after installing plugins
-    --[[ vim.api.nvim_create_autocmd('PaqDoneInstall', {
-            command = 'quitall'
-        }) --]]
-    -- Read and install packages
     PLUGINS.packer.startup(pkgs)
+    vim.api.nvim_create_autocmd('User', {
+            pattern = 'PackerComplete',
+            command = 'quitall',
+        })
     PLUGINS.packer.sync()
 end
 

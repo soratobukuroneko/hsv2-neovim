@@ -16,6 +16,10 @@ CONF = {
     find_files_dirs = {
         '~',
     },
+    -- Key mapping prefix
+    leader = ' ',
+    -- not used
+    local_leader = ','
 }
 
 local pkgs = {
@@ -61,8 +65,15 @@ if CONF.flavour42.is_enabled then
     table.insert(pkgs, 'cacharle/c_formatter_42.vim')
 end
 
+----- Core ------
+vim.g.mapleader = CONF.leader
+vim.g.localleader = CONF.local_leader
+vim.keymap.set(
+    { 'n', 'v' },
+    '<Space>',
+    '<Nop>'
+)
 PLUGINS = {}
-
 PLUGINS.has_packer, PLUGINS.packer = pcall(require, 'packer')
 if not PLUGINS.has_packer then
     require('bootstrap').bootstrap_packer({ pkgs })
@@ -74,15 +85,6 @@ else
         desc = 'Update Packages',
     })
 end
-
------ Core ------
-vim.g.mapleader = ' '
-vim.g.localleader = ','
-vim.keymap.set(
-    { 'n', 'v' },
-    '<Space>',
-    '<Nop>'
-)
 vim.opt.breakindent = true
 vim.opt.clipboard = 'unnamedplus'
 vim.opt.colorcolumn = '80'
@@ -106,11 +108,24 @@ vim.api.nvim_create_autocmd('FileType', {
         vim.opt_local.expandtab = false
     end
 })
+vim.keymap.set('n', '<Leader>vc', function ()
+    vim.cmd('edit $MYVIMRC')
+end, {
+    desc = 'Edit Config',
+})
 
 ----- which-key.nvim -----
 PLUGINS.has_which_key, PLUGINS.which_key = pcall(require, 'which-key')
 if PLUGINS.has_which_key then
     vim.opt.timeoutlen = 300
+end
+
+if PLUGINS.has_which_key then
+    PLUGINS.which_key.register({
+            v = {
+                name = 'Neovim',
+            },
+        }, { prefix = '<Leader>' })
 end
 
 ----- telescope.nvim -----
@@ -200,7 +215,7 @@ if PLUGINS.has_telescope then
     end, {
         desc = 'Branches',
     })
-    vim.keymap.set('n', '<Leader>gS', function()
+    vim.keymap.set('n', '<Leader>gs', function()
         PLUGINS.telescope.builtin.git_status()
     end, {
         desc = 'Status',
@@ -214,9 +229,6 @@ if PLUGINS.has_telescope then
             },
             g = {
                 name = 'Git',
-            },
-            v = {
-                name = 'Neovim',
             },
         }, {
             prefix = '<Leader>',

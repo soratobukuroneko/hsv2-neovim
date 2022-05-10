@@ -5,7 +5,7 @@ PLUGINS = {}
 
 local pkgs = {
     'wbthomason/packer.nvim',
-    'tami5/sqlite.lua', -- needed by some plugins
+    'soratobukuroneko/sqlite.lua', -- needed by some plugins
     'nvim-treesitter/nvim-treesitter', -- ditto
     'nvim-lua/plenary.nvim', -- ibidem
     'gentoo/gentoo-syntax',

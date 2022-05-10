@@ -1,16 +1,18 @@
 #!/bin/zsh
 
-echo "Install Neovim"
-curl -L --silent https://github.com/neovim/neovim/releases/download/nightly/nvim-macos.tar.gz -o /tmp/nvim.tar.gz
-mkdir -vp ~/.local/nvim
-tar xf /tmp/nvim.tar.gz --strip-components 1 -C ~/.local/nvim
-echo "Install Node"
-curl -L --silent https://nodejs.org/dist/v18.1.0/node-v18.1.0-darwin-x64.tar.xz -o /tmp/node.tar.xz
-mkdir -vp ~/.local/nodejs
-tar xf /tmp/node.tar.xz --strip-components 1 -C ~/.local/nodejs
-echo 'export PATH="$HOME/.local/nvim/bin:$HOME/.local/nodejs/bin:$PATH"' >> ~/.zshrc
-echo 'alias vim=nvim' >> ~/.zshrc
-source ~/.zshrc
+INSTALL_DIR="$HOME/.local/nvim-brew"
+
+git clone --depth 1 https://github.com/Homebrew/brew "$INSTALL_DIR"
+eval "`$INSTALL_DIR/bin/brew shellenv`"
+brew update --force --quiet
+chmod -R go-w "`brew --prefix`/share/zsh"
+brew install fd bat glow lua-language-server neovim sqlite node
+brew tap homebrew/cask-fonts
+brew install --cask font-victor-mono
+rm -rf "$INSTALL_DIR/Library"
+rm -f "$INSTALL_DIR/bin/brew"
+echo "`$INSTALL_DIR/bin/brew shellenv | grep --color=no PATH`" >> ~/.zshrc
+echo "alias vim=nvim" >> ~/.zshrc
 
 echo "Install Neovim python bindings"
 pip3 install --user pynvim
@@ -25,25 +27,8 @@ mkdir -p ~/.config
 mv -f ~/.config/nvim ~/.config/nvim-`date "+%Y%m%d%H%M%S"`
 ln -vs "$SRC_DIR/conf/nvim" ~/.config/
 
-echo "Installing dependencies"
-git clone --depth 1 https://github.com/Homebrew/brew ~/.local/homebrew
-eval "`~/.local/homebrew/bin/brew shellenv`"
-brew update --force --quiet
-chmod -R go-w "$(brew --prefix)/share/zsh"
-echo 'PATH="$HOME/.local/homebrew/bin:$PATH"' >> ~/.zshrc
-brew install fd bat glow lua-language-server
-brew tap homebrew/cask-fonts
-brew install --cask font-victor-mono
-rm -rf ~/.local/homebrew/Library
-
-#echo "Installing lua-language-server"
-#mkdir ~/.local/lua-language-server
-#curl -L --silent https://github.com/sumneko/lua-language-server/releases/download/3.2.2/lua-language-server-3.2.2-darwin-x64.tar.gz -o /tmp/lua-language-server.tar.gz
-#tar xf /tmp/lua-language-server.tar.gz -C ~/.local/lua-language-server
-#echo 'export PATH="$HOME/.local/lua-language-server/bin:$PATH"' >> ~/.zshrc
-
 echo "Install Oh My Zsh"
-sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+sh -c "`curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh`"
 
 echo
 echo "Source your ~/.zshrc or open a new shell"

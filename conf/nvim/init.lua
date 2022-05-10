@@ -136,9 +136,9 @@ if PLUGINS.has_telescope then
     end, { desc = 'Manual Pages' })
     vim.keymap.set('n', '<Leader>th', '<CMD>Telescope help_tags<CR>', { desc = 'Help' })
     vim.keymap.set('n', '<Leader>tk', '<CMD>Telescope keymaps<CR>', { desc = 'Keymaps' })
-    vim.keymap.set('n', '<Leader>tgc', '<CMD>Telescope git_bcommits<CR>', { desc = 'Commits' })
-    vim.keymap.set('n', '<Leader>tgb', '<CMD>Telescope git_branches<CR>', { desc = 'Branches' })
-    vim.keymap.set('n', '<Leader>tgs', '<CMD>Telescope git_status<CR>', { desc = 'Status' })
+    vim.keymap.set('n', '<Leader>gC', '<CMD>Telescope git_bcommits<CR>', { desc = 'Browse Commits' })
+    vim.keymap.set('n', '<Leader>gB', '<CMD>Telescope git_branches<CR>', { desc = 'Branches' })
+    vim.keymap.set('n', '<Leader>gS', '<CMD>Telescope git_status<CR>', { desc = 'Status' })
     vim.keymap.set('c', '<C-r>', '<Plug>(TelescopeFuzzyCommandSearch)', { desc = 'Search Command History' })
 
     if PLUGINS.has_which_key_nvim then

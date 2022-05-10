@@ -47,6 +47,8 @@ if FLAVOUR_42 then
     table.insert(pkgs, 'cacharle/c_formatter_42.vim')
 end
 
+PLUGINS = {}
+
 PLUGINS.has_packer, PLUGINS.packer = pcall(require, 'packer')
 if not PLUGINS.has_packer then
     require('bootstrap').bootstrap_packer({ pkgs })

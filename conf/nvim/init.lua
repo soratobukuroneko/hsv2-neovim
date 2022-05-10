@@ -1,7 +1,8 @@
 -- vi: et sw=4 ts=4
+-- hsv-2
+-- 
+-- Enable features for 42 specific needs.
 FLAVOUR_42 = true
-
-PLUGINS = {}
 
 local pkgs = {
     'wbthomason/packer.nvim',

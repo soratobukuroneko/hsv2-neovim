@@ -4,6 +4,7 @@ pkg install \
     build-essential \
     fd \
     git \
+    glow \
     lua-language-server \
     neovim \
     nodejs \

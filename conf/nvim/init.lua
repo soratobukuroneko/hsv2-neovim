@@ -4,9 +4,9 @@
 CONF = {
     -- Enable features for 42 specific needs.
     flavour42 = {
-        is_enabled = false,
-        username = '<CHANGE ME>',
-        email = '<CHANGE ME>',
+        is_enabled = true,
+        username = 'changeme',
+        email = 'changeme',
     },
     -- Browse - Repositories searches in the following directories
     repo_dirs = {
@@ -24,6 +24,7 @@ CONF = {
 
 local pkgs = {
     'wbthomason/packer.nvim',
+    'nvim-treesitter/nvim-treesitter',
     'soratobukuroneko/sqlite.lua', -- needed by some plugins
     'gentoo/gentoo-syntax',
     'sheerun/vim-polyglot',
@@ -404,8 +405,56 @@ if PLUGINS.has_fterm then
 end
 
 ----- fugitive -----
-vim.keymap.set('n', '<Leader>gi', '<CMD>Git init<CR>', {
-    desc = 'Init'
+vim.api.nvim_create_autocmd('BufRead', {
+    pattern = '*',
+    callback = function()
+        if vim.fn.exists(':Git') == 0 then
+            return
+        end
+        if not vim.fn.FugitiveIsGitDir() == 1 then
+            vim.keymap.set('n', '<Leader>gi', '<CMD>Git init<CR>', {
+                desc = 'Init',
+                buffer = true,
+            })
+            return
+        end
+        vim.keymap.set('n', '<Leader>ga', '<CMD>Gwrite<CR>', {
+            desc = 'Stage File',
+            buffer = true
+        })
+        vim.keymap.set('n', '<Leader>gd', '<CMD>Git! difftool<CR>', {
+            desc = 'diff',
+            buffer = true
+        })
+        vim.keymap.set('n', '<Leader>gm', '<CMD>Git mergetool<CR>', {
+            desc = 'Merge Conflicts',
+            buffer = true
+        })
+        vim.keymap.set('n', '<Leader>gl', '<CMD>Git log<CR>', {
+            desc = 'log',
+            buffer = true
+        })
+        vim.keymap.set('n', '<Leader>gc', '<CMD>Git commit<CR>', {
+            desc = 'commit',
+            buffer = true
+        })
+        vim.keymap.set('n', '<Leader>gu', '<CMD>Git pull --rebase<CR>', {
+            desc = 'pull --rebase',
+            buffer = true
+        })
+        vim.keymap.set('n', '<Leader>gp', '<CMD>Git push<CR>', {
+            desc = 'push',
+            buffer = true
+        })
+        vim.keymap.set('n', '<Leader>gP', '<CMD>Git push --force<CR>', {
+            desc = 'push --force',
+            buffer = true
+        })
+        vim.keymap.set('n', '<Leader>gM', '<CMD>Git push --mirror<CR>', {
+            desc = 'push --mirror',
+            buffer = true
+        })
+    end,
 })
 
 ----- gitsigns.nvim -----
@@ -420,31 +469,6 @@ if PLUGINS.has_gitsigns then
             vim.keymap.set({ 'n', 'v' }, '<Leader>ghs', PLUGINS.gitsigns.stage_hunk, { buffer = bufnr, desc = 'Stage' })
             vim.keymap.set('n', '<Leader>ghu', PLUGINS.gitsigns.undo_stage_hunk, { buffer = bufnr, desc = 'Unstage' })
             vim.keymap.set({ 'n', 'v' }, '<Leader>ghr', PLUGINS.gitsigns.reset_hunk, { buffer = bufnr, desc = 'Reset' })
-            ----- fugitive -----
-            vim.keymap.set('n', '<Leader>ga', '<CMD>Gwrite<CR>', {
-                desc = 'Stage File'
-            }, { buffer = bufnr })
-            vim.keymap.set('n', '<Leader>gd', '<CMD>Git! difftool<CR>', {
-                desc = 'diff'
-            }, { buffer = bufnr })
-            vim.keymap.set('n', '<Leader>gm', '<CMD>Git mergetool<CR>', {
-                desc = 'Merge Conflicts'
-            }, { buffer = bufnr })
-            vim.keymap.set('n', '<Leader>gl', '<CMD>Git log<CR>', {
-                desc = 'log'
-            }, { buffer = bufnr })
-            vim.keymap.set('n', '<Leader>gc', '<CMD>Git commit<CR>', {
-                desc = 'commit'
-            }, { buffer = bufnr })
-            vim.keymap.set('n', '<Leader>gp', '<CMD>Git push<CR>', {
-                desc = 'push'
-            }, { buffer = bufnr })
-            vim.keymap.set('n', '<Leader>gP', '<CMD>Git push --force<CR>', {
-                desc = 'push --force'
-            }, { buffer = bufnr })
-            vim.keymap.set('n', '<Leader>gM', '<CMD>Git push --mirror<CR>', {
-                desc = 'push --mirror'
-            }, { buffer = bufnr })
         end,
     })
 end
@@ -641,16 +665,42 @@ if CONF.flavour42.is_enabled then
     vim.g.mail42 = CONF.flavour42.email
     vim.opt.expandtab = false
     vim.api.nvim_create_autocmd('FileType', {
-        pattern = { 'c', 'cpp' },
+        pattern = { 'c', 'cpp', 'make' },
         callback = function()
             vim.keymap.set('n', '<Leader>4h', '<CMD>Stdheader<CR>', {
                 desc = '42 Header',
                 buffer = true,
             })
+            if PLUGINS.has_which_key then
+                PLUGINS.which_key.register({
+                    ['4'] = {
+                        name = '42'
+                    },
+                }, {
+                    prefix = '<Leader>',
+                    buffer = 0,
+                })
+            end
+        end,
+    })
+    vim.api.nvim_create_autocmd('FileType', {
+        pattern = { 'c', 'cpp' },
+        callback = function()
             vim.keymap.set('n', '<Leader>4f', '<CMD>CFormatter42<CR>', {
                 desc = '42 Format',
                 buffer = true,
             })
+            if vim.fn.executable('norminette') and PLUGINS.has_fterm then
+                vim.keymap.set('n', '<Leader>4n', function ()
+                    local file = vim.fn.expand('%')
+                   PLUGINS.fterm.scratch({
+                           cmd = 'norminette "' .. file .. '"'
+                       })
+                end, {
+                    desc = 'norminette',
+                    buffer = true,
+                })
+            end
             if PLUGINS.has_which_key then
                 PLUGINS.which_key.register({
                     ['4'] = {

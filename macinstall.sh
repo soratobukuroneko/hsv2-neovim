@@ -33,9 +33,6 @@ ln -vs "$SRC_DIR/conf/nvim" ~/.config/
 cd "$SRC_DIR"
 git checkout -b localconf
 
-echo "Install Oh My Zsh"
-sh -c "`curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh`"
-
 echo
 echo "Source your ~/.zshrc or open a new shell"
 echo "You need to set your terminal font to 'Victor Mono Nerd Font'"

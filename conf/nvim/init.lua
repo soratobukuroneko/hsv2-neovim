@@ -53,7 +53,10 @@ local pkgs = {
     'rmagatti/auto-session',
     {
         'rmagatti/session-lens',
-        requires = { 'nvim-lua/plenary.nvim' }
+        requires = {
+            'nvim-lua/plenary.nvim',
+            'nvim-telescope/telescope.nvim'
+        }
     },
     'rafamadriz/neon', -- theme
     'numToStr/Comment.nvim',
@@ -122,10 +125,10 @@ end
 
 if PLUGINS.has_which_key then
     PLUGINS.which_key.register({
-            v = {
-                name = 'Neovim',
-            },
-        }, { prefix = '<Leader>' })
+        v = {
+            name = 'Neovim',
+        },
+    }, { prefix = '<Leader>' })
 end
 
 ----- telescope.nvim -----
@@ -624,13 +627,27 @@ if CONF.flavour42.is_enabled then
     vim.g.user42 = CONF.flavour42.username
     vim.g.mail42 = CONF.flavour42.email
     vim.opt.expandtab = false
-    vim.keymap.set('n', '<Leader>ah', '<CMD>Stdheader<CR>', { desc = '42 Header' })
-    vim.keymap.set('n', '<Leader>af', '<CMD>CFormatter42<CR>', { desc = '42 Format' })
-    if PLUGINS.has_which_key then
-        PLUGINS.which_key.register({
-            a = {
-                name = 'Actions'
-            },
-        }, { prefix = '<Leader>' })
-    end
+    vim.api.nvim_create_autocmd('FileType', {
+        pattern = { 'c', 'cpp' },
+        callback = function()
+            vim.keymap.set('n', '<Leader>4h', '<CMD>Stdheader<CR>', {
+                desc = '42 Header',
+                buffer = true,
+            })
+            vim.keymap.set('n', '<Leader>4f', '<CMD>CFormatter42<CR>', {
+                desc = '42 Format',
+                buffer = true,
+            })
+            if PLUGINS.has_which_key then
+                PLUGINS.which_key.register({
+                    ['4'] = {
+                        name = '42'
+                    },
+                }, {
+                    prefix = '<Leader>',
+                    buffer = 0,
+                })
+            end
+        end,
+    })
 end

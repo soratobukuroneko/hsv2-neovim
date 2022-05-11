@@ -621,6 +621,19 @@ if status then
     })
 end
 
+----- glow.nvim -----
+PLUGINS.has_glow = vim.fn.exists(':Glow') ~= 0
+if PLUGINS.has_glow then
+    vim.api.nvim_create_autocmd('FileType', {
+        pattern = 'markdown',
+        callback = function()
+            vim.keymap.set('n', '<Leader>r', '<CMD>Glow<CR>', {
+                desc = 'Render Markdown',
+                buffer = true,
+            })
+        end,
+    })
+end
 
 ----- 42 -----
 if CONF.flavour42.is_enabled then

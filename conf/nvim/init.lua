@@ -4,9 +4,9 @@
 CONF = {
     -- Enable features for 42 specific needs.
     flavour42 = {
-        is_enabled = true,
-        username = 'changeme',
-        email = 'changeme',
+        is_enabled = false,
+        username = 'ablanken',
+        email = 'ablanken@student.42barcelona.com',
     },
     -- Browse - Repositories searches in the following directories
     repo_dirs = {

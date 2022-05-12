@@ -25,6 +25,7 @@ CONF = {
 -- TODO: function isGitDir 
 -- inside plugins config use a local variable self instead of
 -- using global.
+-- fix tab completion vs indentation
 
 local pkgs = {
     'wbthomason/packer.nvim',
@@ -72,6 +73,8 @@ if CONF.flavour42.is_enabled then
     table.insert(pkgs, '42Paris/42header')
     table.insert(pkgs, 'cacharle/c_formatter_42.vim')
 end
+
+UTILS = require('hsv2_utils')
 
 ----- Core ------
 vim.g.mapleader = CONF.leader
@@ -122,9 +125,9 @@ end, {
     desc = 'Edit Config',
 })
 vim.keymap.set('n', '<Leader>aq', function()
-    vim.cmd('quit')
+    vim.api.nvim_win_close()
 end, {
-    desc = ':quit',
+    desc = 'Close Window',
 })
 vim.keymap.set('n', '<Leader>aQ', function()
     vim.cmd('wqa')

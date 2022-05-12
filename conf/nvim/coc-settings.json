@@ -2,7 +2,6 @@
 {
     "suggest": {
         "selection": "recentlyUsedByPrefix",
-        "enablePreselect": true,
         "enablePreview": true,
         "detailMaxLength": 256,
         "acceptSuggestionOnCommitCharacter": true,

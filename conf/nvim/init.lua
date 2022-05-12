@@ -22,6 +22,10 @@ CONF = {
     local_leader = ','
 }
 
+-- TODO: function isGitDir 
+-- inside plugins config use a local variable self instead of
+-- using global.
+
 local pkgs = {
     'wbthomason/packer.nvim',
     'nvim-treesitter/nvim-treesitter',
@@ -117,6 +121,26 @@ vim.keymap.set('n', '<Leader>vc', function()
 end, {
     desc = 'Edit Config',
 })
+vim.keymap.set('n', '<Leader>aq', function()
+    vim.cmd('quit')
+end, {
+    desc = ':quit',
+})
+vim.keymap.set('n', '<Leader>aQ', function()
+    vim.cmd('wqa')
+end, {
+    desc = 'Save and Exit',
+})
+vim.keymap.set('n', '<Leader>ah', function()
+    vim.cmd('nohlsearch')
+end, {
+    desc = 'Disable Search Highlight',
+})
+vim.keymap.set('n', '<Leader>at', function()
+    vim.cmd('tabedit')
+end, {
+    desc = 'New Tab',
+})
 
 ----- which-key.nvim -----
 PLUGINS.has_which_key, PLUGINS.which_key = pcall(require, 'which-key')
@@ -126,6 +150,9 @@ end
 
 if PLUGINS.has_which_key then
     PLUGINS.which_key.register({
+        a = {
+            name = 'Action'
+        },
         v = {
             name = 'Neovim',
         },
@@ -157,7 +184,8 @@ if PLUGINS.has_telescope then
         }
     })
     PLUGINS.telescope.builtin = require('telescope.builtin')
-    vim.keymap.set('n', '<Leader><Space>', function()
+    PLUGINS.telescope.utils = require('telescope.utils')
+    vim.keymap.set('n', '<Leader>a.', function()
         PLUGINS.telescope.builtin.resume()
     end, {
         desc = 'Reopen Telescope',
@@ -223,7 +251,19 @@ if PLUGINS.has_telescope then
     end, {
         desc = 'Status',
     })
+    vim.keymap.set('n', '<Leader>gS', function ()
+       PLUGINS.telescope.builtin.git_stash() 
+    end, {
+        desc = 'Stash',
+    })
     vim.keymap.set('c', '<C-r>', '<Plug>(TelescopeFuzzyCommandSearch)', { desc = 'Search Command History' })
+    vim.keymap.set('n', '<Leader>bg', function ()
+        PLUGINS.telescope.builtin.live_grep({
+                cwd = PLUGINS.telescope.utils.buffer_dir(),
+            })
+    end, {
+        desc = 'grep',
+    })
 
     if PLUGINS.has_which_key then
         PLUGINS.which_key.register({

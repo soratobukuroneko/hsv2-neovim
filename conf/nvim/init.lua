@@ -378,7 +378,7 @@ if vim.fn.exists(':CocEnable') then
     vim.keymap.set('n', '<Leader>ljt', '<Plug>(coc-type-definition)', {
         desc = 'Definition'
     })
-    vim.keymap.set('n', '<Leader>ljr', '<Plug>(coc-references-used)', {
+    vim.keymap.set('n', '<Leader>lj.', '<Plug>(coc-references-used)', {
         desc = 'References'
     })
     function _G.check_back_space()
@@ -479,16 +479,12 @@ vim.api.nvim_create_autocmd('BufRead', {
             desc = 'commit',
             buffer = true
         })
-        vim.keymap.set('n', '<Leader>gu', '<CMD>Git pull --rebase<CR>', {
+        vim.keymap.set('n', '<Leader>gP', '<CMD>Git pull --rebase<CR>', {
             desc = 'pull --rebase',
             buffer = true
         })
         vim.keymap.set('n', '<Leader>gp', '<CMD>Git push<CR>', {
             desc = 'push',
-            buffer = true
-        })
-        vim.keymap.set('n', '<Leader>gP', '<CMD>Git push --force<CR>', {
-            desc = 'push --force',
             buffer = true
         })
         vim.keymap.set('n', '<Leader>gM', '<CMD>Git push --mirror<CR>', {

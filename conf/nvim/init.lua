@@ -14,7 +14,9 @@ CONF = {
     },
     -- Browse - Find Files search directories
     find_files_dirs = {
-        '~',
+        '~/.config',
+        '~/dev',
+        '/etc',
     },
     -- Key mapping prefix
     leader = ' ',

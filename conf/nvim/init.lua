@@ -113,7 +113,7 @@ vim.api.nvim_create_autocmd('FileType', {
         vim.opt_local.expandtab = false
     end
 })
-vim.keymap.set('n', '<Leader>vc', function ()
+vim.keymap.set('n', '<Leader>vc', function()
     vim.cmd('edit $MYVIMRC')
 end, {
     desc = 'Edit Config',
@@ -166,7 +166,6 @@ if PLUGINS.has_telescope then
     vim.keymap.set('n', '<Leader>bs', function()
         PLUGINS.telescope.builtin.find_files({
             follow = true,
-            search_dirs = CONF.find_files_dirs,
         })
     end, {
         desc = 'Find Files in CWD',
@@ -283,111 +282,113 @@ if PLUGINS.has_comment then
 end
 
 ----- coc.nvim -----
-vim.opt.hidden = true
-vim.opt.backup = false
-vim.opt.writebackup = false
-vim.opt.cmdheight = 2
-vim.opt.updatetime = 300
-vim.opt.shortmess:append('c')
-vim.g.coc_global_extensions = {
-    'coc-clang-format-style-options',
-    'coc-clangd',
-    'coc-css',
-    'coc-highlight',
-    'coc-html',
-    'coc-json',
-    'coc-lists',
-    'coc-lua',
-    'coc-markdownlint',
-    'coc-pyright',
-    'coc-sh',
-    'coc-snippets',
-    'coc-toml',
-    'coc-vimlsp',
-    'coc-xml',
-    'coc-yaml',
-}
-vim.g.coc_snippet_next = '<Tab>'
-vim.g.coc_snippet_prev = '<S-Tab>'
-vim.keymap.set('n', '<Leader>ld', '<CMD>CocDiagnostics<CR>', {
-    desc = 'Diagnostics'
-})
-vim.keymap.set('n', '<Leader>lr', '<Plug>(coc-rename)', {
-    desc = 'Rename'
-})
-vim.keymap.set('n', '<Leader>lR', '<Plug>(coc-refactor)', {
-    desc = 'Refactor'
-})
-vim.keymap.set('n', '<Leader>lf', '<Plug>(coc-format)', {
-    desc = 'Format'
-})
-vim.keymap.set('v', '<Leader>lf', '<Plug>(coc-format-selection)', {
-    desc = 'Format'
-})
-vim.keymap.set('n', '<Leader>la', '<CMD>CocAction<CR>', {
-    desc = 'Code Actions'
-})
-vim.keymap.set('n', '<Leader>ljd', '<Plug>(coc-definition)', {
-    desc = 'Definition'
-})
-vim.keymap.set('n', '<Leader>ljD', '<Plug>(coc-declaration)', {
-    desc = 'Declaration'
-})
-vim.keymap.set('n', '<Leader>lji', '<Plug>(coc-implementation)', {
-    desc = 'Implementation'
-})
-vim.keymap.set('n', '<Leader>ljt', '<Plug>(coc-type-definition)', {
-    desc = 'Definition'
-})
-vim.keymap.set('n', '<Leader>ljr', '<Plug>(coc-references-used)', {
-    desc = 'References'
-})
-function _G.check_back_space()
-    local col = vim.api.nvim_win_get_cursor(0)[2]
-    return (col == 0 or vim.api.nvim_get_current_line():sub(col, col):match('%s'))
-end
+if vim.fn.exists(':CocEnable') then
+    vim.opt.hidden = true
+    vim.opt.backup = false
+    vim.opt.writebackup = false
+    vim.opt.cmdheight = 2
+    vim.opt.updatetime = 300
+    vim.opt.shortmess:append('c')
+    vim.g.coc_global_extensions = {
+        'coc-clang-format-style-options',
+        'coc-clangd',
+        'coc-css',
+        'coc-highlight',
+        'coc-html',
+        'coc-json',
+        'coc-lists',
+        'coc-lua',
+        'coc-markdownlint',
+        'coc-pyright',
+        'coc-sh',
+        'coc-snippets',
+        'coc-toml',
+        'coc-vimlsp',
+        'coc-xml',
+        'coc-yaml',
+    }
+    vim.g.coc_snippet_next = '<Tab>'
+    vim.g.coc_snippet_prev = '<S-Tab>'
+    vim.keymap.set('n', '<Leader>ld', '<CMD>CocDiagnostics<CR>', {
+        desc = 'Diagnostics'
+    })
+    vim.keymap.set('n', '<Leader>lr', '<Plug>(coc-rename)', {
+        desc = 'Rename'
+    })
+    vim.keymap.set('n', '<Leader>lR', '<Plug>(coc-refactor)', {
+        desc = 'Refactor'
+    })
+    vim.keymap.set('n', '<Leader>lf', '<Plug>(coc-format)', {
+        desc = 'Format'
+    })
+    vim.keymap.set('v', '<Leader>lf', '<Plug>(coc-format-selection)', {
+        desc = 'Format'
+    })
+    vim.keymap.set('n', '<Leader>la', '<CMD>CocAction<CR>', {
+        desc = 'Code Actions'
+    })
+    vim.keymap.set('n', '<Leader>ljd', '<Plug>(coc-definition)', {
+        desc = 'Definition'
+    })
+    vim.keymap.set('n', '<Leader>ljD', '<Plug>(coc-declaration)', {
+        desc = 'Declaration'
+    })
+    vim.keymap.set('n', '<Leader>lji', '<Plug>(coc-implementation)', {
+        desc = 'Implementation'
+    })
+    vim.keymap.set('n', '<Leader>ljt', '<Plug>(coc-type-definition)', {
+        desc = 'Definition'
+    })
+    vim.keymap.set('n', '<Leader>ljr', '<Plug>(coc-references-used)', {
+        desc = 'References'
+    })
+    function _G.check_back_space()
+        local col = vim.api.nvim_win_get_cursor(0)[2]
+        return (col == 0 or vim.api.nvim_get_current_line():sub(col, col):match('%s'))
+    end
 
-vim.keymap.set('i', '<C-Space>', 'coc#refresh()', {
-    silent = true,
-    expr = true
-})
-vim.keymap.set('i', '<TAB>',
-    "pumvisible() ? '<C-n>' : v:lua.check_back_space() ? '<Tab>' : coc#refresh()", {
-    noremap = true,
-    silent = true,
-    expr = true
-})
-vim.keymap.set('i', '<S-TAB>', 'pumvisible() ? "<C-p>" : "<C-h>"', {
-    noremap = true,
-    expr = true
-})
-vim.keymap.set('i', '<CR>',
-    'pumvisible() ? coc#_select_confirm() : "<C-G>u<CR><C-R>=coc#on_enter()<CR>"', {
-    silent = true,
-    expr = true,
-    noremap = true
-})
-vim.api.nvim_create_autocmd('FileType', {
-    pattern = { 'c', 'cpp' },
-    callback = function()
-        vim.keymap.set('n', '<Leader>ljs',
-            '<CMD>CocCommand clangd.switchSourceHeader vsplit<CR>', {
-            buffer = true,
-            desc = 'Switch Header/Source'
+    vim.keymap.set('i', '<C-Space>', 'coc#refresh()', {
+        silent = true,
+        expr = true
+    })
+    vim.keymap.set('i', '<TAB>',
+        "pumvisible() ? '<C-n>' : v:lua.check_back_space() ? '<Tab>' : coc#refresh()", {
+        noremap = true,
+        silent = true,
+        expr = true
+    })
+    vim.keymap.set('i', '<S-TAB>', 'pumvisible() ? "<C-p>" : "<C-h>"', {
+        noremap = true,
+        expr = true
+    })
+    vim.keymap.set('i', '<CR>',
+        'pumvisible() ? coc#_select_confirm() : "<C-G>u<CR><C-R>=coc#on_enter()<CR>"', {
+        silent = true,
+        expr = true,
+        noremap = true
+    })
+    vim.api.nvim_create_autocmd('FileType', {
+        pattern = { 'c', 'cpp' },
+        callback = function()
+            vim.keymap.set('n', '<Leader>ljs',
+                '<CMD>CocCommand clangd.switchSourceHeader vsplit<CR>', {
+                buffer = true,
+                desc = 'Switch Header/Source'
+            })
+        end
+    })
+    if PLUGINS.has_which_key then
+        PLUGINS.which_key.register({
+            l = {
+                name = 'Language',
+                j = {
+                    name = 'Jump'
+                }
+            }
+        }, {
+            prefix = '<Leader>',
         })
     end
-})
-if PLUGINS.has_which_key then
-    PLUGINS.which_key.register({
-        l = {
-            name = 'Language',
-            j = {
-                name = 'Jump'
-            }
-        }
-    }, {
-        prefix = '<Leader>',
-    })
 end
 
 ----- FTerm.nvim -----
@@ -620,7 +621,7 @@ if PLUGINS.has_telescope and PLUGINS.has_auto_session then
             previer = true,
         })
         PLUGINS.telescope.load_extension('session-lens')
-        vim.keymap.set('n', '<Leader>bs', function()
+        vim.keymap.set('n', '<Leader>s', function()
             PLUGINS.telescope.extensions['session-lens'].search_session()
         end, {
             desc = 'Sessions',
@@ -692,11 +693,12 @@ if CONF.flavour42.is_enabled then
                 buffer = true,
             })
             if vim.fn.executable('norminette') and PLUGINS.has_fterm then
-                vim.keymap.set('n', '<Leader>4n', function ()
+                vim.keymap.set('n', '<Leader>4n', function()
+                    vim.cmd('write')
                     local file = vim.fn.expand('%')
-                   PLUGINS.fterm.scratch({
-                           cmd = 'norminette "' .. file .. '"'
-                       })
+                    PLUGINS.fterm.scratch({
+                        cmd = 'norminette "' .. file .. '"'
+                    })
                 end, {
                     desc = 'norminette',
                     buffer = true,

@@ -65,7 +65,7 @@
         ]
     },
     "clangd.checkUpdates": true,
-    "clangd.fallbackFlags": "-Wall -Wextra -Wpedantic -Werror",
+    "clangd.fallbackFlags": ["-Wall", "-Wextra", "-Wpedantic", "-Werror"],
     "languageserver": {
         "lua": {
             "command": "lua-language-server",

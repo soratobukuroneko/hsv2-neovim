@@ -542,7 +542,7 @@ if PLUGINS.has_neoclip then
         default_register = '+'
     })
     vim.keymap.set('n', '<Leader>bc', function()
-        PLUGINS.telescope.extensions.neoclip()
+        PLUGINS.telescope.extensions.neoclip.neoclip()
     end, {
         desc = 'Clipboard History',
     })

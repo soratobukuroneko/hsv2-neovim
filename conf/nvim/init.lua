@@ -127,7 +127,15 @@ end, {
     desc = 'Edit Config',
 })
 vim.keymap.set('n', '<Leader>aq', function()
-    vim.api.nvim_win_close()
+    local wins = 0
+    for _ in ipairs(vim.api.nvim_list_wins()) do
+        wins = wins + 1
+    end
+    if wins > 1 then
+        vim.api.nvim_win_close(0, false)
+    else
+        vim.api.nvim_exec('quit', false)
+    end
 end, {
     desc = 'Close Window',
 })

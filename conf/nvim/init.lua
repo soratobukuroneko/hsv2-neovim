@@ -521,16 +521,16 @@ if PLUGINS.has_gitsigns then
             vim.keymap.set({ 'n', 'v' }, '<Leader>ghr', PLUGINS.gitsigns.reset_hunk, { buffer = bufnr, desc = 'Reset' })
         end,
     })
-end
-if PLUGINS.has_which_key then
-    PLUGINS.which_key.register({
-        g = {
-            name = 'Git',
-            h = {
-                name = 'Hunk'
+    if PLUGINS.has_which_key then
+        PLUGINS.which_key.register({
+            g = {
+                name = 'Git',
+                h = {
+                    name = 'Hunk'
+                }
             }
-        }
-    }, { prefix = '<Leader>' })
+        }, { prefix = '<Leader>' })
+    end
 end
 
 ----- indent-blankline.nvim -----

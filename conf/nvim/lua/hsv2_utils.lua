@@ -18,32 +18,32 @@ function M.hsv2_conf_update(post_sync)
     local fterm = require('FTerm')
     local repo = M.git_repo_root(os.getenv('MYVIMRC'))
     if repo and vim.fn.executable('git') ~= 0 then
-        local git = '!git -C ' .. repo
-        vim.api.nvim_exec(git .. ' stash push', false)
+        local git = 'git -C ' .. repo
+        local cmd = '!'
         for _, action in ipairs({
+            'stash push',
             'checkout master',
             'pull --rebase',
             'switch dev',
             'rebase master',
             'stash pop'
         }) do
-            if os.getenv('?') == 0 then
-                vim.api.nvim_exec('echohl ErrorMsg', false)
-                vim.api.nvim_exec('echo ERRRRRROR', false)
-                vim.api.nvim_exec('echohl None', false)
-                break
-            end
-            vim.api.nvim_exec(git .. ' ' .. action, false)
+            cmd = cmd .. git .. ' ' .. action .. '&&'
         end
-        vim.api.nvim_exec('!' .. cmd, false)
-        vim.api.nvim_exec([[
+        vim.api.nvim_exec(cmd, false)
+        if os.getenv('?') == 0 then
+            vim.api.nvim_exec('echohl ErrorMsg', false)
+            vim.api.nvim_exec('echo ERRRRRROR', false)
+            vim.api.nvim_exec('echohl None', false)
+            vim.api.nvim_exec([[
                         0tabnew $MYVIMRC
                         Git mergetool
-                        ]])
-        post_sync = next(vim.api.nvim_get_runtime_file(post_sync, false))
-        if post_sync ~= nil then
+                        ]], false)
+        end
+        local i, post_sync = next(vim.api.nvim_get_runtime_file(post_sync, false))
+        if i ~= 0 then
             fterm.scratch({
-                cmd = 'nvim -c "source ' .. post_sync .. '" ' .. repo .. '/History.md',
+                cmd = 'nvim -Rmc "source ' .. post_sync .. '" ' .. repo .. '/History.md',
             })
         end
     end

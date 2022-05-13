@@ -24,7 +24,7 @@ CONF = {
     local_leader = ','
 }
 
--- TODO: function isGitDir 
+-- TODO: function isGitDir
 -- inside plugins config use a local variable self instead of
 -- using global.
 -- fix tab completion vs indentation
@@ -93,9 +93,11 @@ if not PLUGINS.has_packer then
 else
     PLUGINS.packer.startup({ pkgs })
     vim.keymap.set('n', '<Leader>vu', function()
-        PLUGINS.packer.update()
+        UTILS.hsv2_conf_update(
+            UTILS.git_repo_root(os.getenv('MYVIMRC')) .. '/post_sync.lua'
+            )
     end, {
-        desc = 'Update Packages',
+        desc = 'Config Update',
     })
 end
 vim.opt.breakindent = true
@@ -256,16 +258,16 @@ if PLUGINS.has_telescope then
     end, {
         desc = 'Status',
     })
-    vim.keymap.set('n', '<Leader>gS', function ()
-       PLUGINS.telescope.builtin.git_stash() 
+    vim.keymap.set('n', '<Leader>gS', function()
+        PLUGINS.telescope.builtin.git_stash()
     end, {
         desc = 'Stash',
     })
     vim.keymap.set('c', '<C-r>', '<Plug>(TelescopeFuzzyCommandSearch)', { desc = 'Search Command History' })
-    vim.keymap.set('n', '<Leader>bg', function ()
+    vim.keymap.set('n', '<Leader>bg', function()
         PLUGINS.telescope.builtin.live_grep({
-                cwd = PLUGINS.telescope.utils.buffer_dir(),
-            })
+            cwd = PLUGINS.telescope.utils.buffer_dir(),
+        })
     end, {
         desc = 'grep',
     })
@@ -326,7 +328,7 @@ if PLUGINS.has_comment then
 end
 
 ----- coc.nvim -----
-if vim.fn.exists(':CocEnable') then
+if vim.fn.exists(':CocInfo') ~= 0 then
     vim.opt.hidden = true
     vim.opt.backup = false
     vim.opt.writebackup = false

@@ -91,9 +91,7 @@ if not PLUGINS.has_packer then
 else
     PLUGINS.packer.startup({ pkgs })
     vim.keymap.set('n', '<Leader>vu', function()
-        UTILS.hsv2_conf_update(
-            UTILS.git_repo_root(os.getenv('MYVIMRC')) .. '/post_sync.lua'
-            )
+        UTILS.hsv2_conf_update('lua/post_sync.lua')
     end, {
         desc = 'Config Update',
     })

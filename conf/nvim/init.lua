@@ -334,7 +334,7 @@ if PLUGINS.has_comment then
 end
 
 ----- coc.nvim -----
-if vim.fn.exists(':CocInfo') ~= 0 then
+if next(vim.api.nvim_get_runtime_file('plugin/coc.vim', false)) ~= 0 then
     vim.opt.hidden = true
     vim.opt.backup = false
     vim.opt.writebackup = false

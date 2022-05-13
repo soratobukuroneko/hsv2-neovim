@@ -1,5 +1,5 @@
 local function post_packer_sync()
-    if vim.fn.exists(':CocCommand') ~= 0 then
+    if next(vim.api.nvim_get_runtime_file('plugin/coc.vim', false)) ~= 0 then
         vim.api.nvim_exec('CocUpdate', false)
     end
 end

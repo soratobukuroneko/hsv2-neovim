@@ -14,7 +14,7 @@ end
 local function hsv2_conf_update(post_sync)
     local fterm = require('FTerm')
     local repo = git_repo_root(os.getenv('MYVIMRC'))
-    if repo and vim.fn.executable('git') then
+    if repo and vim.fn.executable('git') ~= 0 then
         local cmd = 'cd ' .. repo
         cmd = cmd .. '&& git stash push'
         cmd = cmd .. '&& git checkout master'
@@ -22,26 +22,14 @@ local function hsv2_conf_update(post_sync)
         cmd = cmd .. '&& git checkout localconf'
         cmd = cmd .. '&& git rebase master'
         cmd = cmd .. '&& git stash pop'
-        fterm.scratch({
-            cmd = cmd,
-            on_exit = function()
-                if (pcall(function()
-                    require(os.getenv('MYVIMRC'))
-                end)) then
-                    if post_sync then
-                        fterm.scratch({
-                            cmd = 'nvim -c "source ' .. post_sync .. '"',
-                        })
-                    end
-                else
-                    vim.api.nvim_exec([[
+        vim.api.nvim_exec('!' .. cmd, false)
+            vim.api.nvim_exec([[
                         0tabnew $MYVIMRC
                         Git mergetool
                         ]])
-                end
-            end
-        })
-
+            fterm.scratch({
+                cmd = 'nvim -c "source ' .. post_sync .. '" ' .. repo .. '/History.md',
+            })
     end
 end
 

@@ -22,11 +22,6 @@ CONF = {
     local_leader = ','
 }
 
--- TODO: function isGitDir
--- inside plugins config use a local variable self instead of
--- using global.
--- fix tab completion vs indentation
-
 local pkgs = {
     'wbthomason/packer.nvim',
     'nvim-treesitter/nvim-treesitter',

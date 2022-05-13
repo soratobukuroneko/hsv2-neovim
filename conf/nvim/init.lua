@@ -396,7 +396,7 @@ if next(vim.api.nvim_get_runtime_file('plugin/coc.vim', false)) ~= 0 then
     })
     function _G.check_back_space()
         local col = vim.api.nvim_win_get_cursor(0)[2]
-        return (col == 0 or vim.api.nvim_get_current_line():sub(col, col):match('%s'))
+        return (col == 0 or vim.api.nvim_get_current_line():sub(col, col):match('%s') ~= nil)
     end
 
     vim.keymap.set('i', '<C-Space>', 'coc#refresh()', {

@@ -23,7 +23,7 @@ function M.hsv2_conf_update(post_sync)
         for _, action in ipairs({
             'checkout master',
             'pull --rebase',
-            'switch wip',
+            'switch dev',
             'rebase master',
             'stash pop'
         }) do

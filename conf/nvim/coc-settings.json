@@ -1,6 +1,9 @@
 // vi: et sw=4 ts=4
 {
     "suggest": {
+        "floatConfig": {
+            "winblend": 30
+        },
         "selection": "recentlyUsedByPrefix",
         "enablePreview": true,
         "detailMaxLength": 256,
@@ -44,10 +47,23 @@
         "tooltip": true
     },
     "diagnostic": {
+        "floatConfig": {
+            "winblend": 15
+        },
         "autoRefresh": true,
         "refreshOnInsertMode": true,
         "virtualText": true,
         "virtualTextCurrentLineOnly": false
+    },
+    "signature": {
+        "floatConfig": {
+            "winblend": 30
+        }
+    },
+    "hover": {
+        "floatConfig": {
+            "winblend": 30
+        }
     },
     "codeLens": {
         "enable": true

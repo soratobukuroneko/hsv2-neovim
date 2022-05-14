@@ -241,10 +241,30 @@ if PLUGINS.has_telescope then
     end, {
         desc = 'Buffers',
     })
-    vim.keymap.set('n', '<Leader>q', function()
+    vim.keymap.set('n', '<Leader>,q', function()
         PLUGINS.telescope.builtin.quickfix()
     end, {
         desc = 'Quickfix',
+    })
+    vim.keymap.set('n', '<Leader>,l', function()
+        PLUGINS.telescope.builtin.loclist()
+    end, {
+        desc = 'Locations',
+    })
+    vim.keymap.set('n', '<Leader>,j', function()
+        PLUGINS.telescope.builtin.jumplist()
+    end, {
+        desc = 'Jumps',
+    })
+    vim.keymap.set('n', '<Leader>,d', function()
+        PLUGINS.telescope.builtin.diagnostics()
+    end, {
+        desc = 'Diagnostics',
+    })
+    vim.keymap.set('n', '<Leader>,m', function()
+        PLUGINS.telescope.builtin.marks()
+    end, {
+        desc = 'Marks',
     })
     vim.keymap.set('n', '<Leader>bm', function()
         PLUGINS.telescope.builtin.man_pages({
@@ -302,6 +322,9 @@ if PLUGINS.has_telescope then
             g = {
                 name = 'Git',
             },
+            [','] = {
+                name = 'Locations'
+            }
         }, {
             prefix = '<Leader>',
         })

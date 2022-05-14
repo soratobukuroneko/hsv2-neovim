@@ -42,7 +42,12 @@ local pkgs = {
     'AckslD/nvim-neoclip.lua',
     'airblade/vim-rooter',
     'lambdalisue/suda.vim',
-    'nvim-telescope/telescope.nvim',
+    {
+        'nvim-telescope/telescope.nvim',
+        requires = {
+            'nvim-lua/plenary.nvim',
+        },
+    },
     {
         'nvim-telescope/telescope-fzf-native.nvim',
         run = 'make'
@@ -55,7 +60,6 @@ local pkgs = {
     {
         'rmagatti/session-lens',
         requires = {
-            'nvim-lua/plenary.nvim',
             'nvim-telescope/telescope.nvim'
         }
     },

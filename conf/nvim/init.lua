@@ -85,10 +85,20 @@ vim.keymap.set(
 )
 PLUGINS = {}
 PLUGINS.has_packer, PLUGINS.packer = pcall(require, 'packer')
+local function get_conf()
+    return {
+        pkgs,
+        config = {
+            display = {
+                open_fn = require('packer.util').float,
+            }
+        }
+    }
+end
 if not PLUGINS.has_packer then
-    require('bootstrap').bootstrap_packer({ pkgs })
+    require('bootstrap').bootstrap_packer(get_conf)
 else
-    PLUGINS.packer.startup({ pkgs })
+    PLUGINS.packer.startup(get_conf)
     vim.keymap.set('n', '<Leader>vu', function()
         UTILS.hsv2_conf_update('lua/post_sync.lua')
     end, {

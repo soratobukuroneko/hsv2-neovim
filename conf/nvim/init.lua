@@ -675,11 +675,16 @@ if PLUGINS.has_telescope and PLUGINS.has_auto_session then
 end
 
 ----- neon -----
-vim.g.neon_bold = true
-vim.g.neon_italic_boolean = true
-vim.g.neon_italic_function = true
-vim.g.neon_italic_keyword = true
-vim.g.neon_italic_variable = true
+vim.api.nvim_create_autocmd('ColorSchemePre', {
+    pattern = 'neon',
+    callback = function()
+        vim.g.neon_bold = true
+        vim.g.neon_italic_boolean = true
+        vim.g.neon_italic_function = true
+        vim.g.neon_italic_keyword = true
+        vim.g.neon_italic_variable = true
+    end,
+})
 pcall(vim.cmd, 'colorscheme neon')
 
 ----- treesitter -----

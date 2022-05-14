@@ -191,6 +191,7 @@ PLUGINS.has_telescope, PLUGINS.telescope = pcall(require, 'telescope')
 if PLUGINS.has_telescope then
     PLUGINS.telescope.setup({
         defaults = {
+            layout_strategy = 'flex',
             winblend = 15,
             path_display = { 'smart' },
             dynamic_preview_title = true,

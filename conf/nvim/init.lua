@@ -19,7 +19,9 @@ CONF = {
     -- Key mapping prefix
     leader = ' ',
     -- not used
-    local_leader = ','
+    local_leader = ',',
+    -- Use devicons and so on. Require a patched Font
+    use_icons = true,
 }
 
 local pkgs = {
@@ -187,6 +189,7 @@ if PLUGINS.has_telescope then
             winblend = 15,
             path_display = { 'smart' },
             dynamic_preview_title = true,
+            color_devicons = CONF.use_icons,
             history = {
                 mappings = {
                     i = {
@@ -579,6 +582,7 @@ if PLUGINS.has_lualine then
         },
         options = {
             globalstatus = true,
+            icons_enabled = CONF.use_icons,
         },
         extensions = {
             'fugitive',

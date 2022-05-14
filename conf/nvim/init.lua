@@ -24,6 +24,11 @@ CONF = {
     use_icons = true,
 }
 
+-- TODO:
+-- check https://github.com/kevinhwang91/nvim-bqf
+-- check https://github.com/chentoast/marks.nvim
+-- use packer_plugins to check for available plugins
+
 local pkgs = {
     'wbthomason/packer.nvim',
     'nvim-treesitter/nvim-treesitter',

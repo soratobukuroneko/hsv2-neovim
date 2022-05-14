@@ -286,7 +286,7 @@ if PLUGINS.has_telescope then
         desc = 'Keymapping'
     })
     vim.keymap.set('n', '<Leader>gC', function()
-        PLUGINS.telescope.builtin.git_bcommits()
+        PLUGINS.telescope.builtin.git_commits()
     end, {
         desc = 'Revisions'
     })

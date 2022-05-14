@@ -62,13 +62,18 @@ local pkgs = {
     {
         'rmagatti/session-lens',
         requires = {
-            'nvim-telescope/telescope.nvim'
-        }
+            'nvim-telescope/telescope.nvim',
+            'nvim-lua/plenary.nvim',
+        },
+        after = 'plenary.nvim',
     },
     'rafamadriz/neon', -- theme
     'numToStr/Comment.nvim',
     'numToStr/FTerm.nvim',
-    'ellisonleao/glow.nvim',
+    {
+        'ellisonleao/glow.nvim',
+        ft = 'markdown'
+    }
 }
 if CONF.flavour42.is_enabled then
     table.insert(pkgs, '42Paris/42header')

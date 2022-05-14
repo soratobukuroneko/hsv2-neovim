@@ -703,10 +703,11 @@ end
 
 ----- session-lens -----
 if PLUGINS.has_telescope and PLUGINS.has_auto_session then
+    vim.api.nvim_exec('packadd session-lens', false)
     PLUGINS.has_session_lens, PLUGINS.session_lens = pcall(require, 'session-lens')
     if PLUGINS.has_session_lens then
         PLUGINS.session_lens.setup({
-            previer = true,
+            previewer = true,
         })
         PLUGINS.telescope.load_extension('session-lens')
         vim.keymap.set('n', '<Leader>s', function()

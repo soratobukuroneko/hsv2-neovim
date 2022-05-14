@@ -105,7 +105,7 @@ end
 if not PLUGINS.has_packer then
     require('bootstrap').bootstrap_packer(get_conf)
 else
-    PLUGINS.packer.startup(get_conf)
+    PLUGINS.packer.startup(get_conf())
     vim.keymap.set('n', '<Leader>vu', function()
         UTILS.hsv2_conf_update('lua/post_sync.lua')
     end, {

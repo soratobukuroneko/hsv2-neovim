@@ -1,36 +1,41 @@
--- vi: et sw=4 ts=4
+-- vi: et sw=4 ts=4:
 -- hsv-2
 --
-CONF = {
-    -- Enable features for 42 specific needs.
-    flavour42 = {
-        is_enabled = true,
-        username = 'changeme',
-        email = 'changeme',
-    },
-    -- Browse - Repositories searches in the following directories
-    repo_dirs = {
-        '~',
-    },
-    -- Browse - Find Files search directories
-    find_files_dirs = {
-        '~',
-    },
-    -- Key mapping prefix
-    leader = ' ',
-    -- not used
-    local_leader = ',',
-    -- Use devicons and so on. Require a patched Font
-    use_icons = true,
+HSV2 = {}
+HSV2.conf = {
+    -- -- Enable features for 42 specific needs.
+    -- flavour42 = {
+    --     is_enabled = true,
+    --     username = 'changeme',
+    --     email = 'changeme',
+    -- },
+    -- -- Browse - Repositories searches in the following directories
+    -- repo_dirs = {
+    --     '~',
+    -- },
+    -- -- Browse - Find Files search directories
+    -- find_files_dirs = {
+    --     '~',
+    -- },
+    -- -- Key mapping prefix
+    -- leader = ' ',
+    -- -- Use devicons and so on. Require a patched Font
+    -- use_icons = false,
+    -- packer_conf = {}
 }
+HSV2.utils = require('hsv2_utils')
 
 -- TODO:
--- check https://github.com/kevinhwang91/nvim-bqf
--- check https://github.com/chentoast/marks.nvim
+-- check kevinhwang91/nvim-bqf
+-- check chentoast/marks.nvim
+-- check nvim-treesitter/nvim-treesitter-textobjects
 -- use packer_plugins to check for available plugins
+-- plugin_spec packages dependency and conditional loading
+-- map toggle virtual text / ui things
 
-local pkgs = {
-    'wbthomason/packer.nvim',
+local conf = HSV2.conf
+local utils = HSV2.utils
+local plugin_spec = {
     'nvim-treesitter/nvim-treesitter',
     'soratobukuroneko/sqlite.lua', -- needed by some plugins
     'gentoo/gentoo-syntax',
@@ -80,26 +85,23 @@ local pkgs = {
         ft = 'markdown'
     }
 }
-if CONF.flavour42.is_enabled then
-    table.insert(pkgs, '42Paris/42header')
-    table.insert(pkgs, 'cacharle/c_formatter_42.vim')
+if conf.flavour42.is_enabled then
+    table.insert(plugin_spec, '42Paris/42header')
+    table.insert(plugin_spec, 'cacharle/c_formatter_42.vim')
 end
 
-UTILS = require('hsv2_utils')
-
 ----- Core ------
-vim.g.mapleader = CONF.leader
-vim.g.localleader = CONF.local_leader
+vim.g.mapleader = conf.leader
+vim.g.localleader = conf.local_leader
 vim.keymap.set(
     { 'n', 'v' },
     '<Space>',
     '<Nop>'
 )
 PLUGINS = {}
-PLUGINS.has_packer, PLUGINS.packer = pcall(require, 'packer')
 local function get_conf()
     return {
-        pkgs,
+        plugin_spec,
         config = {
             display = {
                 open_fn = require('packer.util').float,
@@ -107,12 +109,12 @@ local function get_conf()
         }
     }
 end
-if not PLUGINS.has_packer then
+if not has_packer then
     require('bootstrap').bootstrap_packer(get_conf)
 else
-    PLUGINS.packer.startup(get_conf())
+    packer.startup(get_conf())
     vim.keymap.set('n', '<Leader>vu', function()
-        UTILS.hsv2_conf_update('lua/post_sync.lua')
+        utils.hsv2_conf_update(conf.post_sync_script)
     end, {
         desc = 'Config Update',
     })
@@ -200,7 +202,7 @@ if PLUGINS.has_telescope then
             winblend = 15,
             path_display = { 'smart' },
             dynamic_preview_title = true,
-            color_devicons = CONF.use_icons,
+            color_devicons = conf.use_icons,
             history = {
                 mappings = {
                     i = {
@@ -234,7 +236,7 @@ if PLUGINS.has_telescope then
     vim.keymap.set('n', '<Leader>bS', function()
         PLUGINS.telescope.builtin.find_files({
             follow = true,
-            search_dirs = CONF.find_files_dirs,
+            search_dirs = conf.find_files_dirs,
         })
     end, {
         desc = 'Find Files',
@@ -500,6 +502,11 @@ if PLUGINS.has_fterm then
     vim.keymap.set('n', '<Leader>.', PLUGINS.fterm.toggle, {
         desc = 'Terminal'
     })
+    vim.api.nvim_create_autocmd('QuitPre', {
+            callback = function ()
+
+            end
+        })
 end
 
 ----- fugitive -----
@@ -616,7 +623,7 @@ if PLUGINS.has_lualine then
         },
         options = {
             globalstatus = true,
-            icons_enabled = CONF.use_icons,
+            icons_enabled = conf.use_icons,
         },
         extensions = {
             'fugitive',
@@ -688,7 +695,7 @@ if PLUGINS.has_telescope then
     PLUGINS.has_telescope_repo, PLUGINS.telescope_repo = pcall(PLUGINS.telescope.load_extension, 'repo')
     vim.keymap.set('n', '<Leader>br', function()
         PLUGINS.telescope.extensions.repo.list({
-            search_dirs = CONF.repo_dirs
+            search_dirs = conf.repo_dirs
         })
     end, {
         desc = 'Repositories'
@@ -762,9 +769,9 @@ end
 -- end
 
 ----- 42 -----
-if CONF.flavour42.is_enabled then
-    vim.g.user42 = CONF.flavour42.username
-    vim.g.mail42 = CONF.flavour42.email
+if conf.flavour42.is_enabled then
+    vim.g.user42 = conf.flavour42.username
+    vim.g.mail42 = conf.flavour42.email
     vim.opt.expandtab = false
     vim.api.nvim_create_autocmd('FileType', {
         pattern = { 'c', 'cpp', 'make' },

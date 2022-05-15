@@ -16,13 +16,13 @@ local function bootstrap_packer(get_opts)
     clone_packer()
     -- Load Packer
     vim.cmd('packadd packer.nvim')
-    PLUGINS.packer = require('packer')
-    PLUGINS.packer.startup(get_opts())
+    pkg = require('packer')
+    pkg.startup(get_opts())
     vim.api.nvim_create_autocmd('User', {
             pattern = 'PackerComplete',
             command = 'quitall',
         })
-    PLUGINS.packer.sync()
+    pkg.sync()
 end
 
 return { bootstrap_packer = bootstrap_packer }

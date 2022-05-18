@@ -68,10 +68,12 @@ M.table_set_default = (function()
 end)()
 
 -- TODO: doesn't work with nested tables, fix that
-function M.set_defaults(config)
+function M.set_defaults(config, default)
     config = config or {}
-    M.table_set_default(config, require('hsv2.default'))
-    vim.pretty_print(config.hsv2.packages)
+    default = default or require('hsv2.default')
+    for i, attr in ipairs(config) do
+        -- TODO
+    end
     return config
 end
 
@@ -95,8 +97,8 @@ M.init_packer = (function()
         if not status then
             return nil
         end
-        packer.init(M.get_packer_config(config))
         packer.reset()
+        packer.init(M.get_packer_config(config))
         return packer
     end)
 end)()

@@ -2,15 +2,13 @@
 -- hsv2
 local M = {}
 local u = require('hsv2.utils')
-local _mod = 'hsv2.pkg.core'
+local _pkg_prefix = 'hsv2.pkg.'
 
-function M.packer_spec(pkgconfig)
+function M.packer_spec(config)
     local spec = {}
-    if pkgconfig.plugins then
-        for _, plugin in ipairs(pkgconfig.plugins) do
-            if plugin.enabled then
-                u.table_append(spec, require(_mod .. '.plugin.' .. plugin).packer_spec)
-            end
+    for _, pkg in ipairs(config) do
+        if pkg.enabled then
+            u.table_append(spec, require(_pkg_prefix .. pkg).packer_spec)
         end
     end
     return spec

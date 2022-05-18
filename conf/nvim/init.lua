@@ -1,6 +1,13 @@
 -- vi: et sw=4 ts=4:
 -- hsv-2
 --
+local config = {}
+VERBOSE = true
+local hsv2 = require('hsv2.utils')
+config = hsv2.set_defaults(config)
+local packer = hsv2.init_packer(config)
+hsv2.enable_pkgs(packer, config.hsv2.packages)
+--[[
 HSV2 = {}
 HSV2.conf = {
     -- -- Enable features for 42 specific needs.
@@ -824,3 +831,4 @@ if conf.flavour42.is_enabled then
         end,
     })
 end
+--]]

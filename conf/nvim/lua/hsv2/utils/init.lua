@@ -14,7 +14,7 @@ function M.git_repo_root(path)
     return false
 end
 
-function M.hsv2_conf_update(post_sync)
+function M.hsv2_conf_update(post_sync_script)
     local fterm = require('FTerm')
     local repo = M.git_repo_root(os.getenv('MYVIMRC'))
     if repo and vim.fn.executable('git') ~= 0 then
@@ -31,7 +31,7 @@ function M.hsv2_conf_update(post_sync)
             cmd = cmd .. git .. ' ' .. action .. '&&'
         end
         vim.api.nvim_exec(cmd, false)
-        if os.getenv('?') == 0 then
+        if os.getenv('?') ~= 0 then
             vim.api.nvim_exec('echohl ErrorMsg', false)
             vim.api.nvim_exec('echo ERRRRRROR', false)
             vim.api.nvim_exec('echohl None', false)
@@ -40,8 +40,9 @@ function M.hsv2_conf_update(post_sync)
                         Git mergetool
                         ]], false)
         end
-        local i, post_sync = next(vim.api.nvim_get_runtime_file(post_sync, false))
-        if i ~= 0 then
+        -- TODO: source all scripts found
+        local _, post_sync = next(vim.api.nvim_get_runtime_file(post_sync_script, false))
+        if post_sync then
             fterm.scratch({
                 cmd = 'nvim -Rmc "source ' .. post_sync .. '" ' .. repo .. '/History.md',
             })
@@ -49,7 +50,7 @@ function M.hsv2_conf_update(post_sync)
     end
 end
 
-function M.has_plugin(plugin)
+function M.has_plugin_loaded(plugin)
     return packer_plugins and packer_plugins[plugin]
         and packer_plugins[plugin].enabled
 end
@@ -66,6 +67,25 @@ M.table_set_default = (function()
     end)
 end)()
 
+-- TODO: doesn't work with nested tables, fix that
+function M.set_defaults(config)
+    config = config or {}
+    M.table_set_default(config, require('hsv2.default'))
+    vim.pretty_print(config.hsv2.packages)
+    return config
+end
+
+function M.get_packer_config(config)
+    local packer_config = config.packer
+    if config.hsv2.use_icons then
+        packer_config.display.working_sym = packer_config.display.working_sym or ''
+        packer_config.display.removed_sym = packer_config.display.removed_sym or ''
+        packer_config.display.header_sym = packer_config.display.header_sym or ''
+    end
+
+    return packer_config
+end
+
 M.init_packer = (function()
     local status, packer = pcall(require, 'packer')
     return (function(config)
@@ -75,52 +95,26 @@ M.init_packer = (function()
         if not status then
             return nil
         end
-       local default_config = {
-            -- Enable features for 42 specific needs.
-            flavour42 = {
-                is_enabled = true,
-                username = 'changeme',
-                email = 'changeme',
-            },
-            -- Browse - Repositories searches in the following directories
-            repo_dirs = {
-                '~',
-            },
-            -- Browse - Find Files search directories
-            find_files_dirs = {
-                '~',
-            },
-            -- Key mapping prefix
-            leader = ' ',
-            -- not used
-            local_leader = ',',
-            -- Use devicons and so on. Require a patched Font
-            use_icons = false,
-            post_sync_script = 'lua/post_sync.lua',
-            packer_conf = {
-                disable_commands = true,
-                display = {
-                    open_fn = require('packer.util').float,
-                },
-                autoremove = true,
-            }
-        }
-        if default_config.use_icons then
-            local d = default_config.packer_conf.display
-            default_config.packer_conf.display.working_sym = d.working_sym or ''
-            default_config.packer_conf.display.removed_sym = d.removed_sym or ''
-            default_config.packer_conf.display.header_sym = d.header_sym or ''
-        end
-        packer.init(config.packer_conf)
+        packer.init(M.get_packer_config(config))
         packer.reset()
         return packer
     end)
 end)()
 
+function M.enable_pkgs(packer, config)
+    vim.pretty_print(config)
+    for _, pkg_config in ipairs(config) do
+        M.enable_pkg(packer, pkg_config)
+    end
+    packer.compile()
+end
+
 -- packer.compile should be run after
-function M.enable_pkg(packer, pkg, conf)
-    pkg = require('hsv2.pkg.' .. pkg)
-    packer.use(pkg.packer_spec)
+function M.enable_pkg(packer, config)
+    if VERBOSE then
+        vim.echo('enable pkg "' .. config[0] .. '"')
+    end
+    packer.use(require('hsv2.pkg.' .. config[0]).packer_spec(config))
 end
 
 function M.table_append(dst, src)

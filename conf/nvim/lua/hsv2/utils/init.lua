@@ -55,21 +55,8 @@ function M.has_plugin_loaded(plugin)
         and packer_plugins[plugin].enabled
 end
 
--- https://www.lua.org/pil/17.3.html
-M.table_set_default = (function()
-    local defaults = {}
-    setmetatable(defaults, { __mode = "k" })
-    local metatable = { __index = function(t) return defaults[t] end }
-
-    return (function(t, d)
-        defaults[t] = d
-        setmetatable(t, metatable)
-    end)
-end)()
-
--- TODO: doesn't work with nested tables, fix that
 function M.set_defaults(config, defaults)
-    local set = function (k, v)
+    local set = function(k, v)
         if type(config[k]) == type(v) == 'table' then
             config[k] = M.set_defaults(config[k], v)
         elseif not config[k] then
@@ -103,11 +90,8 @@ function M.get_packer_config(config)
 end
 
 M.init_packer = (function()
-    local status, packer = pcall(require, 'packer')
     return (function(config)
-        if not status then
-            status, packer = pcall(require, 'packer')
-        end
+        local status, packer = pcall(require, 'packer')
         if not status then
             return nil
         end
@@ -117,15 +101,25 @@ M.init_packer = (function()
     end)
 end)()
 
+function M.is_plugin_loaded(p)
+    return packer_plugins and packer_plugins[p] and packer_plugins[p].loaded
+end
+
+function M.load_plugin(p)
+    if not M.is_plugin_loaded(p) then
+        vim.api.nvim_exec('packadd ')
+    end
+end
+
 function M.enable_pkgs(packer, config)
-    vim.pretty_print(config)
-    for _, pkg_config in ipairs(config) do
-        M.enable_pkg(packer, pkg_config)
+    local use_spec = require('hsv2.pkg')(M).packer_spec(config)
+    if next(use_spec) then
+        packer.use(use_spec)
     end
     packer.compile()
 end
 
--- packer.compile should be run after
+-- packer.compile should be run after it
 function M.enable_pkg(packer, config)
     if VERBOSE then
         vim.api.nvim_exec('echo "enable pkg \'' .. config[1] .. '\'"', false)
@@ -137,6 +131,39 @@ function M.table_append(dst, src)
     for k, v in ipairs(src) do
         dst[k] = v
     end
+    for k, v in pairs(src) do
+        dst[k] = v
+    end
+end
+
+function M.table_join(t1, t2)
+    local res = {}
+    for _, t in ipairs({ t1, t2 }) do
+        M.table_append(res, t)
+    end
+    return res
+end
+
+function M.set_vim_global(prefix, value_map)
+    for k, v in pairs(value_map) do
+        vim.g[prefix .. k] = v
+    end
+end
+
+function M.make_packer_spec(repo, opts)
+    local spec = {
+        repo,
+        opt = true,
+    }
+    if type(opts) == 'table' then
+        spec = M.table_append(spec, opts)
+    end
+
+    return spec
+end
+
+function M.default()
+    
 end
 
 return M

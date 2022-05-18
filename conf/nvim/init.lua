@@ -3,11 +3,14 @@
 --
 local config = {}
 VERBOSE = true
+vim.opt.runtimepath:append(string.match(os.getenv('MYVIMRC'), '(.*)/init.lua'))
 local hsv2 = require('hsv2.utils')
 config = hsv2.set_defaults(config, nil)
-vim.pretty_print(config)
 local packer = hsv2.init_packer(config)
-hsv2.enable_pkgs(packer, config.hsv2.packages)
+hsv2.enable_pkgs(packer, config)
+
+-- TODO: put conf in a separate file and compute there the final conf values
+
 --[[
 HSV2 = {}
 HSV2.conf = {

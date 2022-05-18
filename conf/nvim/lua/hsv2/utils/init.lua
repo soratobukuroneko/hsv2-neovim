@@ -69,6 +69,13 @@ end)()
 
 -- TODO: doesn't work with nested tables, fix that
 function M.set_defaults(config, defaults)
+    local set = function (k, v)
+        if type(config[k]) == type(v) == 'table' then
+            config[k] = M.set_defaults(config[k], v)
+        elseif not config[k] then
+            config[k] = v
+        end
+    end
     config = config or {}
     if defaults then
         M.set_defaults(defaults)
@@ -76,21 +83,13 @@ function M.set_defaults(config, defaults)
         defaults = require('hsv2.default')
     end
     for k, v in ipairs(defaults) do
-        if type(config[k]) == type(v) == 'table' then
-            config[k] = M.set_defaults(config[k], v)
-        elseif not config[k] then
-            config[k] = v
-        end
+        set(k, v)
+    end
+    for k, v in pairs(defaults) do
+        set(k, v)
     end
     return config
 end
-
--- local t = { test = {'hello'}}
--- for k, v in ipairs(t) do
---     vim.pretty_print(k)
---     vim.pretty_print(v)
---     print('hello')
--- end
 
 function M.get_packer_config(config)
     local packer_config = config.packer
@@ -129,9 +128,9 @@ end
 -- packer.compile should be run after
 function M.enable_pkg(packer, config)
     if VERBOSE then
-        vim.echo('enable pkg "' .. config[0] .. '"')
+        vim.api.nvim_exec('echo "enable pkg \'' .. config[1] .. '\'"', false)
     end
-    packer.use(require('hsv2.pkg.' .. config[0]).packer_spec(config))
+    packer.use(require('hsv2.pkg.' .. config[1]).packer_spec(config))
 end
 
 function M.table_append(dst, src)

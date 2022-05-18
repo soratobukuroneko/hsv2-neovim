@@ -68,14 +68,29 @@ M.table_set_default = (function()
 end)()
 
 -- TODO: doesn't work with nested tables, fix that
-function M.set_defaults(config, default)
+function M.set_defaults(config, defaults)
     config = config or {}
-    default = default or require('hsv2.default')
-    for i, attr in ipairs(config) do
-        -- TODO
+    if defaults then
+        M.set_defaults(defaults)
+    else
+        defaults = require('hsv2.default')
+    end
+    for k, v in ipairs(defaults) do
+        if type(config[k]) == type(v) == 'table' then
+            config[k] = M.set_defaults(config[k], v)
+        elseif not config[k] then
+            config[k] = v
+        end
     end
     return config
 end
+
+-- local t = { test = {'hello'}}
+-- for k, v in ipairs(t) do
+--     vim.pretty_print(k)
+--     vim.pretty_print(v)
+--     print('hello')
+-- end
 
 function M.get_packer_config(config)
     local packer_config = config.packer

@@ -4,7 +4,8 @@
 local config = {}
 VERBOSE = true
 local hsv2 = require('hsv2.utils')
-config = hsv2.set_defaults(config)
+config = hsv2.set_defaults(config, nil)
+vim.pretty_print(config)
 local packer = hsv2.init_packer(config)
 hsv2.enable_pkgs(packer, config.hsv2.packages)
 --[[

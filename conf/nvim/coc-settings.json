@@ -1,4 +1,4 @@
-// vi: et sw=4 ts=4
+// vi: et sw=4 ts=4:
 {
     "suggest": {
         "selection": "recentlyUsedByPrefix",
@@ -64,7 +64,7 @@
         ]
     },
     "clangd.checkUpdates": true,
-    "clangd.fallbackFlags": ["-Wall", "-Wextra", "-Wpedantic", "-Werror"],
+    "clangd.fallbackFlags": ["-Wall", "-Wextra", "-Wpedantic"],
     "languageserver": {
         "lua": {
             "command": "lua-language-server",

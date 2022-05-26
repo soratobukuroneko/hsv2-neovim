@@ -258,9 +258,7 @@ if PLUGINS.has_telescope then
     })
     vim.keymap.set('c', '<C-r>', '<Plug>(TelescopeFuzzyCommandSearch)', { desc = 'Search Command History' })
     vim.keymap.set('n', '<Leader>bg', function ()
-        PLUGINS.telescope.builtin.live_grep({
-                cwd = PLUGINS.telescope.utils.buffer_dir(),
-            })
+        PLUGINS.telescope.builtin.live_grep()
     end, {
         desc = 'grep',
     })

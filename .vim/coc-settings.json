@@ -1,0 +1,7 @@
+// vi: et sw=4 ts=4:
+{
+    "Lua.diagnostics.globals": [
+        "vim",
+        "packer_plugins"
+    ]
+}
